@@ -2370,7 +2370,8 @@ h1{letter-spacing:.005em}
 .loc-note{font:400 11.5px/1.5 var(--fb);color:var(--tm-fg);margin:10px 0 0}
 .gal-note{font:400 12px/1.6 var(--fb);color:var(--tm-fg);text-align:center;margin-top:14px}
 .visit-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.dev2-mark img{max-width:200px;height:auto;margin:10px 0 16px}
+/* R4 (Justin item 3): the logo is a block img, so text-align cannot centre it */
+.dev2-mark img{display:block;max-width:200px;height:auto;margin:10px auto 16px}
 .dev2-tiles{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
 @media(min-width:700px){.dev2-tiles{grid-template-columns:repeat(2,1fr)}}
 .dev2-tile{padding:14px 16px;background:var(--paper);border:1px solid rgba(89,77,10,.16)}
@@ -2465,10 +2466,10 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;
 /* R2 QA: 7 items in a 4-col grid left a bare tile — the last item takes it */
 @media(min-width:640px){.city-item:last-child{grid-column:span 2}}
 
-/* ---------- FACILITIES (R3): board layout + on-the-spot zoom ------------- */
-.fac-map-img{aspect-ratio:auto !important;height:auto !important;background:#1E1E1E;overflow:hidden;position:relative}
-.fac-map-img img.fac-base{position:relative !important;display:block;width:100%;height:auto}
-/* the full-screen chip is now a real button */
+/* ---------- FACILITIES (R4): the client's blended boards ----------------- */
+/* No cards, no boxes: the plan floats on the silk ground and the render fades
+   in beside it, matching the client's Figma board composition. */
+#fac{background:#EDE2CC url('assets/bg-page-texture.webp') center/cover no-repeat}
 .fac-zoom{position:absolute;top:12px;right:12px;z-index:6;display:inline-flex;align-items:center;gap:6px;
   padding:8px 12px;border-radius:2px;background:rgba(31,38,18,.85);border:1px solid rgba(216,203,159,.5);
   font:600 11px/1.2 var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#F0E4D1;cursor:pointer}
@@ -2483,34 +2484,65 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;
 .fz-btn:focus-visible{outline:2px solid #584D04;outline-offset:2px}
 [data-zoom-surface]{position:relative;overflow:hidden}
 [data-zoom-surface] img.fac-base{will-change:transform}
-/* the Figma board grid: plan left, render + categories right */
-.fac-grid{display:grid;gap:16px;margin-bottom:24px}
-@media(min-width:1024px){.fac-grid{grid-template-columns:1.35fr 1fr;gap:20px;align-items:stretch}}
-.fac-map-wrap{margin:0}
-.fac-side{display:flex;flex-direction:column;gap:14px;min-width:0}
-.fac-render{position:relative;margin:0;overflow:hidden;border-radius:14px;flex:0 0 auto}
-.fac-render img{display:block;width:100%;height:220px;object-fit:cover}
-@media(min-width:1280px){.fac-render img{height:250px}}
-.fac-render figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
-  font:600 12.5px/1.4 var(--fb);color:#fff;letter-spacing:.04em;
-  background:linear-gradient(180deg,transparent 0%,rgba(31,38,18,.78) 100%)}
-@media(min-width:1024px){
-  #fac .fac-side .fac-btns{display:flex;flex-direction:column;gap:10px;margin:0;flex:1;justify-content:space-between}
+/* the L8 board: floating plan left, render blending in on the right */
+.fac-board{display:grid;gap:22px;margin-bottom:36px;align-items:center}
+@media(min-width:1024px){.fac-board{grid-template-columns:1.2fr 1fr;gap:0;align-items:center}}
+.fac-plan-float{touch-action:pan-y}
+.fac-plan-float img.fac-base{display:block;width:100%;height:auto}
+.fac-cap{position:absolute;left:4px;bottom:2px;z-index:5;font:600 11px/1.3 var(--fm);
+  letter-spacing:.16em;text-transform:uppercase;color:#6E5228;pointer-events:none}
+@media(max-width:1023px){.fac-cap{position:static;display:block;margin-top:6px}}
+.fac-render{position:relative;margin:0}
+.fac-render img{display:block;width:100%;height:auto;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 100%)}
+@media(max-width:1023px){
+  .fac-render img{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 16%,#000 100%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 16%,#000 100%)}
 }
-/* Level 9 board: full width, media large */
-.fac-l9{display:block}
-.fac-l9-head{margin-bottom:18px}
-.l9-legend{grid-template-columns:repeat(2,1fr) !important}
-@media(min-width:860px){.l9-legend{grid-template-columns:repeat(3,1fr) !important}}
-.fac-l9-media{display:grid;gap:16px}
-@media(min-width:860px){.fac-l9-media{grid-template-columns:1.15fr 1fr;align-items:stretch}}
-.fac-l9-render{position:relative;margin:0;overflow:hidden;border-radius:14px}
-.fac-l9-render img{display:block;width:100%;height:100%;min-height:300px;object-fit:cover}
-.fac-l9-render figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
-  font:600 12.5px/1.4 var(--fb);color:#fff;letter-spacing:.04em;
-  background:linear-gradient(180deg,transparent 0%,rgba(31,38,18,.78) 100%)}
-.fac-l9-img{position:relative;background:#1E1E1E;border-radius:14px;overflow:hidden}
-.fac-l9-img img{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+.fac-render figcaption{margin-top:8px;font:600 11.5px/1.4 var(--fb);letter-spacing:.1em;
+  text-transform:uppercase;color:#6E5228;text-align:right}
+/* the always-visible facility index */
+.fac-legend{display:grid;gap:26px 30px;margin-bottom:44px;padding-top:28px;
+  border-top:1px solid rgba(89,77,10,.22)}
+@media(min-width:640px){.fac-legend{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1100px){.fac-legend{grid-template-columns:repeat(4,1fr)}}
+.fac-leg-head{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap}
+.fac-leg-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.fac-leg-head b{font:500 17px/1.3 var(--fd);color:var(--olive)}
+.fac-leg-head em{font:600 11px/1.3 var(--fb);letter-spacing:.08em;text-transform:uppercase;
+  color:#6E5228;font-style:normal}
+.fac-leg-group ul{list-style:none;margin:0;padding:0}
+.fac-leg-group li{font:400 13.5px/1.5 var(--fb);color:#55533E;padding:5px 0;
+  border-bottom:1px solid rgba(89,77,10,.12)}
+.fac-leg-group li:last-child{border-bottom:none}
+/* Level 9 board: render | title + lettered legend | highlighted overview plan.
+   background/border/padding reset kills the old paper-card treatment (R4:
+   "not stuck in a box"). */
+.fac-l9{display:grid;gap:26px;align-items:center;background:none;border:none;
+  padding:36px 0 0;border-top:1px solid rgba(89,77,10,.22)}
+@media(min-width:1024px){.fac-l9{grid-template-columns:1.15fr .95fr .75fr;gap:34px}}
+.fac-l9-render{margin:0}
+.fac-l9-render img{display:block;width:100%;height:auto;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 76%,transparent 100%);
+  mask-image:linear-gradient(90deg,#000 0,#000 76%,transparent 100%)}
+@media(max-width:1023px){
+  .fac-l9-render img{-webkit-mask-image:linear-gradient(180deg,#000 0,#000 80%,transparent 100%);
+    mask-image:linear-gradient(180deg,#000 0,#000 80%,transparent 100%)}
+}
+.fac-l9-render figcaption{margin-top:6px;font:600 11.5px/1.4 var(--fb);letter-spacing:.1em;
+  text-transform:uppercase;color:#6E5228}
+.fac-l9 h3.fac-l9-title{font:500 clamp(28px,3.2vw,40px)/1.15 var(--fd);color:#7A5A2D;
+  padding-bottom:12px;margin:0 0 18px;border-bottom:1px solid rgba(122,90,45,.45)}
+.l9-legend{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.l9-legend li{display:flex;gap:10px;align-items:flex-start;font:400 13.5px/1.55 var(--fb);color:#55533E}
+.l9-k{flex:none;min-width:26px;padding:2px 7px;border-radius:12px;background:#6E5228;
+  font:700 11px/1.6 var(--fb);color:#F5EFDC;text-align:center;letter-spacing:.02em}
+.fac-zoom--inline{position:static;margin-top:18px}
+.fac-l9-plan{margin:0}
+.fac-l9-plan img{display:block;width:100%;max-width:420px;height:auto;margin:0 auto;
+  -webkit-mask-image:radial-gradient(135% 135% at 50% 46%,#000 60%,transparent 86%);
+  mask-image:radial-gradient(135% 135% at 50% 46%,#000 60%,transparent 86%)}
 /* R2: the Figma kumiko line pattern as a quiet corner texture on the band */
 #fac::before{content:'';position:absolute;right:-40px;bottom:-60px;width:300px;height:500px;z-index:0;
   background:url('assets/deco-kumiko.webp') no-repeat center/contain;opacity:.16;pointer-events:none}
@@ -2933,90 +2965,74 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="stl">Facilities that bring experience to living</h2>
       <p class="sdesc">34 facilities on Level 8, and more on Level 9. Discover a harmonious blend of intimate privacy, vibrant energy, and meaningful connection, masterfully layered throughout the entire development.</p>
     </div>
-    <!-- R3 (Justin items 4 + 12): the Figma facilities-board composition —
-         plan left, pool render right — with ON-THE-SPOT zoom on the plan
-         (buttons, double-click, pinch, drag-pan) plus the full-screen chip. -->
-    <div class="fac-grid fi">
-      <div class="fac-map-wrap">
-        <div class="fac-map-img" data-zoom-surface>
-          <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/fac-plan8-full.webp" aria-label="Open the Level 8 facilities plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
-          <div class="fz-ctl">
-            <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
-            <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
-            <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
-          </div>
-          <img src="assets/fac-plan8-hd.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="1600" height="1580">
+    <!-- R4 (Justin items 1 + 2): the client's board composition — the plan
+         floats DIRECTLY on the silk ground (transparent-edge cut from the
+         updated .fig's sand-ground sheet), the pool render blends in beside it
+         with a soft fade, no cards, no boxes. The full facility index sits
+         below as an always-visible legend, so every name is readable without
+         a tap. In-place zoom + full-screen kept from R3. -->
+    <div class="fac-board fi">
+      <div class="fac-plan-float" data-zoom-surface>
+        <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/fac-plan8-full.webp" aria-label="Open the Level 8 facilities plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
+        <div class="fz-ctl">
+          <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+          <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
         </div>
+        <img src="assets/fac-plan8-float.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="1800" height="1787">
+        <span class="fac-cap">Level 8 Podium</span>
       </div>
-      <div class="fac-side">
-        <figure class="fac-render">
-          <img src="assets/fac-pool-render.webp" alt="Infinity pool on the Level 8 podium, artist impression" width="1348" height="564">
-          <figcaption>Infinity Pool, Level 8 Podium</figcaption>
-        </figure>
-        <div class="fac-btns">
-      <div class="fac-btn active" data-layer="fac-water" data-cat="water" onclick="pickFac(this,'fac-water','water')"><span class="fac-bthumb"><img src="assets/fac-pool.png" alt=""></span>
-        <span class="fac-btn-dot" style="background:#4CADE8"></span>
-        <div class="fac-btn-info"><div class="fac-btn-name">Water &amp; Deck</div><div class="fac-btn-count">5 facilities &middot; Infinity Pool &middot; Jacuzzi</div></div>
-      </div>
-      <div class="fac-btn" data-layer="fac-fitness" data-cat="fitness" onclick="pickFac(this,'fac-fitness','fitness')"><span class="fac-bthumb"><img src="assets/gal-playground-2x.webp" alt=""></span>
-        <span class="fac-btn-dot" style="background:#8E8A4D"></span>
-        <div class="fac-btn-info"><div class="fac-btn-name">Fitness &amp; Wellness</div><div class="fac-btn-count">7 facilities &middot; Gymnasium &middot; Yoga &middot; Sauna</div></div>
-      </div>
-      <div class="fac-btn" data-layer="fac-gardens" data-cat="gardens" onclick="pickFac(this,'fac-gardens','gardens')"><span class="fac-bthumb"><img src="assets/zen-final.webp" alt=""></span>
-        <span class="fac-btn-dot" style="background:#4CAE7A"></span>
-        <div class="fac-btn-info"><div class="fac-btn-name">Gardens &amp; Nature</div><div class="fac-btn-count">10 facilities &middot; Kumiko gardens &middot; Zen forest</div></div>
-      </div>
-      <div class="fac-btn" data-layer="fac-leisure" data-cat="leisure" onclick="pickFac(this,'fac-leisure','leisure')"><span class="fac-bthumb"><img src="assets/gal-bbq-2x.webp" alt=""></span>
-        <span class="fac-btn-dot" style="background:#B28957"></span>
-        <div class="fac-btn-info"><div class="fac-btn-name">Social &amp; Leisure</div><div class="fac-btn-count">12 facilities &middot; Co-dining &middot; KTV &middot; BBQ</div></div>
-      </div>
-        </div><!-- /fac-btns -->
-      </div><!-- /fac-side -->
-    </div><!-- /fac-grid -->
-
-    <div class="fac-detail open" id="fac-detail-water" data-cat="water">
-      <div class="fac-detail-head"><span class="fac-detail-dot" style="background:#4CADE8"></span><div><div class="fac-detail-title">Water &amp; Deck</div><div class="fac-detail-sub">5 facilities</div></div></div>
-      <ul class="fac-detail-list"><li>Infinity Pool</li><li>Jacuzzi</li><li>Wading Pool</li><li>Sun Deck</li><li>Sun Lounger</li></ul>
-    </div>
-    <div class="fac-detail" id="fac-detail-fitness" data-cat="fitness">
-      <div class="fac-detail-head"><span class="fac-detail-dot" style="background:#8E8A4D"></span><div><div class="fac-detail-title">Fitness &amp; Wellness</div><div class="fac-detail-sub">7 facilities</div></div></div>
-      <ul class="fac-detail-list"><li>Ladies Gymnasium</li><li>Yoga Room</li><li>Gymnasium</li><li>Changing Rooms &amp; Sauna</li><li>Reflexology Trail</li><li>Outdoor Fitness</li><li>Meditation Deck</li></ul>
-    </div>
-    <div class="fac-detail" id="fac-detail-gardens" data-cat="gardens">
-      <div class="fac-detail-head"><span class="fac-detail-dot" style="background:#4CAE7A"></span><div><div class="fac-detail-title">Gardens &amp; Nature</div><div class="fac-detail-sub">10 facilities</div></div></div>
-      <ul class="fac-detail-list"><li>Elevated Garden with Viewing Lounge</li><li>Kumiko Cabana</li><li>Kumiko Pavilion</li><li>Kumiko Islands Secret Garden</li><li>Herbs Garden</li><li>Minami Lawn</li><li>Minami Seating Corner</li><li>Pocket Garden</li><li>Hokubu Viewing Corner</li><li>Pause Garden</li></ul>
-    </div>
-    <div class="fac-detail" id="fac-detail-leisure" data-cat="leisure">
-      <div class="fac-detail-head"><span class="fac-detail-dot" style="background:#B28957"></span><div><div class="fac-detail-title">Social &amp; Leisure</div><div class="fac-detail-sub">12 facilities</div></div></div>
-      <ul class="fac-detail-list"><li>Tea House</li><li>Lounge Room</li><li>KTV Room</li><li>Games Room</li><li>Co-Working Room</li><li>Kids Room</li><li>Pantry</li><li>Multipurpose Hall (Pickleball court, Community Hall)</li><li>Co-Dining Room</li><li>Co-Dining Kitchen</li><li>BBQ Area</li><li>Kids Playground</li></ul>
+      <figure class="fac-render">
+        <img src="assets/fac-pool-render.webp" alt="Infinity pool on the Level 8 podium, artist impression" width="1600" height="1066">
+        <figcaption>Infinity Pool, Level 8 Podium</figcaption>
+      </figure>
     </div>
 
-    <!-- R3 (Justin items 5 + 12): Level 9 Podium as a full-width board, the
-         Figma composition — big render + big plan, legend under the title. -->
+    <!-- The 34 facilities, always visible (Justin: "hard to read what is it") -->
+    <div class="fac-legend rv">
+      <div class="fac-leg-group">
+        <div class="fac-leg-head"><span class="fac-leg-dot" style="background:#4CADE8"></span><b>Water &amp; Deck</b><em>5 facilities</em></div>
+        <ul><li>Infinity Pool</li><li>Jacuzzi</li><li>Wading Pool</li><li>Sun Deck</li><li>Sun Lounger</li></ul>
+      </div>
+      <div class="fac-leg-group">
+        <div class="fac-leg-head"><span class="fac-leg-dot" style="background:#8E8A4D"></span><b>Fitness &amp; Wellness</b><em>7 facilities</em></div>
+        <ul><li>Gymnasium</li><li>Ladies Gymnasium</li><li>Yoga Room</li><li>Changing Rooms &amp; Sauna</li><li>Reflexology Trail</li><li>Outdoor Fitness</li><li>Meditation Deck</li></ul>
+      </div>
+      <div class="fac-leg-group">
+        <div class="fac-leg-head"><span class="fac-leg-dot" style="background:#4CAE7A"></span><b>Gardens &amp; Nature</b><em>10 facilities</em></div>
+        <ul><li>Elevated Garden with Viewing Lounge</li><li>Kumiko Cabana</li><li>Kumiko Pavilion</li><li>Kumiko Islands Secret Garden</li><li>Herbs Garden</li><li>Minami Lawn</li><li>Minami Seating Corner</li><li>Pocket Garden</li><li>Hokubu Viewing Corner</li><li>Pause Garden</li></ul>
+      </div>
+      <div class="fac-leg-group">
+        <div class="fac-leg-head"><span class="fac-leg-dot" style="background:#B28957"></span><b>Social &amp; Leisure</b><em>12 facilities</em></div>
+        <ul><li>Tea House</li><li>Lounge Room</li><li>KTV Room</li><li>Games Room</li><li>Co-Working Room</li><li>Kids Room</li><li>Pantry</li><li>Multipurpose Hall (Pickleball Court, Community Hall)</li><li>Co-Dining Room</li><li>Co-Dining Kitchen</li><li>BBQ Area</li><li>Kids Playground</li></ul>
+      </div>
+    </div>
+
+    <!-- R4 (Justin item 1): Level 9 Podium rebuilt as the client's own board —
+         zen render blending in on the left, "Level 9 Podium" title + the
+         board's verbatim lettered legend, and the highlighted-overview plan
+         (cut from the client's composed board raster) on the right. No boxes.
+         The full-screen chip opens the detailed Level 9 deck plan. -->
     <div class="fac-l9 rv">
-      <div class="fac-l9-head">
-        <h3>Level 9 Podium: the elevated Zen Forest</h3>
-        <ul class="fac-detail-list l9-legend">
-          <li>Access on Level 9 to the Zen Elevated Garden</li>
-          <li>Elevated Zen Garden</li><li>Zen Garden</li><li>Zen Walkway</li>
-          <li>Kumiko Floating Deck</li><li>Seaview Lounge</li>
+      <figure class="fac-l9-render">
+        <img src="assets/fac-zen-render.webp" alt="Zen Elevated Garden on Level 9, artist impression" width="1600" height="1000">
+        <figcaption>Zen Elevated Garden, Level 9</figcaption>
+      </figure>
+      <div class="fac-l9-copy">
+        <h3 class="fac-l9-title">Level 9 Podium</h3>
+        <ul class="l9-legend">
+          <li><span class="l9-k">A</span>Access on Level 9 to the Zen Elevated Zen Forest</li>
+          <li><span class="l9-k">17</span>Elevated Zen Garden</li>
+          <li><span class="l9-k">17a</span>Zen Garden</li>
+          <li><span class="l9-k">17b</span>Zen Walkway</li>
+          <li><span class="l9-k">17c</span>Kumiko Floating Deck</li>
+          <li><span class="l9-k">17d</span>Seaview Lounge</li>
         </ul>
+        <button type="button" class="fac-zoom fac-zoom--inline" data-fp-zoom data-full="assets/fac-plan9-hd.webp" aria-label="Open the detailed Level 9 plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>View the detailed plan</button>
       </div>
-      <div class="fac-l9-media">
-        <figure class="fac-l9-render">
-          <img src="assets/zen-final.webp" alt="Zen Elevated Garden on Level 9, artist impression" width="1106" height="596">
-          <figcaption>Zen Elevated Garden, Level 9</figcaption>
-        </figure>
-        <div class="fac-l9-img" data-zoom-surface>
-          <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/fac-plan9-hd.webp" aria-label="Open the Level 9 plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
-          <div class="fz-ctl">
-            <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
-            <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
-            <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
-          </div>
-          <img src="assets/fac-plan9-hd.webp" alt="Level 9 Podium plan, elevated Zen Forest" class="fac-base" width="887" height="1013">
-        </div>
-      </div>
+      <figure class="fac-l9-plan">
+        <img src="assets/fac-plan9-highlight.webp" alt="Level 9 Podium highlighted on the podium overview plan" width="510" height="625">
+      </figure>
     </div>
   </div>
 </section>
