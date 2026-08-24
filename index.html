@@ -795,11 +795,13 @@ h2.stl{font-family:var(--fd);font-size:28px;font-weight:400;color:var(--cream-fg
 @media(min-width:1024px){.loc-content{grid-template-columns:minmax(0,1.15fr) minmax(0,440px);gap:40px;align-items:center}}
 .loc-info{display:flex;flex-direction:column;gap:22px;order:2}
 @media(min-width:1024px){.loc-info{order:2}}
-.loc-map-bg{position:relative;width:100%;order:1;cursor:zoom-in;overflow:hidden;aspect-ratio:4/5;max-height:520px}
-@media(min-width:768px){.loc-map-bg{aspect-ratio:1/1}}
-@media(min-width:1024px){.loc-map-bg{order:1;aspect-ratio:auto;max-height:none;height:100%;align-self:stretch}}
-.loc-map-bg img{width:100%;height:100%;display:block;object-fit:cover;object-position:center right;transform:scale(1.2);transform-origin:center center;filter:drop-shadow(0 20px 40px rgba(0,0,0,.3))}
-@media(min-width:1024px){.loc-map-bg img{transform:scale(1.1);object-position:center center}}
+/* R3 (Justin item 8): the map sits WHOLE in a paper card — no cover-crop, no
+   scale transform (the in-place zoom engine owns the img transform now). */
+.loc-map-bg{position:relative;width:100%;order:1;overflow:hidden;
+  background:#fff;border:1px solid rgba(89,77,10,.16);border-radius:16px;
+  box-shadow:0 10px 30px rgba(89,77,10,.08)}
+.loc-map-bg img{width:100%;height:auto;display:block}
+@media(min-width:1024px){.loc-map-bg{order:1;align-self:center}}
 /* R2 QA (Justin item 5): the translucent dark panel over the beige band read
    as muddy olive with washed-out rows — re-carded light, dark ink. */
 .loc-panel{background:#FBF8EE;border:1px solid rgba(89,77,10,.22);border-radius:16px;padding:26px 22px;
@@ -1497,7 +1499,7 @@ html.js .nx .rv{opacity:1;transform:none;transition:none}
 .nx .cout .l{font:600 11px/1.5 var(--fb);letter-spacing:.14em;text-transform:uppercase;opacity:.92}
 .nx .cout .v{font:500 clamp(26px,4vw,34px)/1.1 var(--fd);margin-top:3px}
 /* R2: calculator price picker (Aurora cp-pick, restyled for the light panel) */
-.nx .cprice{margin-bottom:18px}
+.nx .cprice{margin-bottom:18px;position:relative}
 @media(min-width:1024px){.nx .cprice{margin-bottom:0}}
 .nx .cprice .cl{display:block;font:600 11px/1.6 var(--fb);letter-spacing:.1em;text-transform:uppercase;
   color:var(--cream2-fg);opacity:.82;margin-bottom:9px}
@@ -1509,8 +1511,10 @@ html.js .nx .rv{opacity:1;transform:none;transition:none}
 .nx .cp-pick-t{font:600 11px/1.4 var(--fb);letter-spacing:.06em;text-transform:uppercase;color:#6E5228;margin-left:auto}
 .nx .cp-pick-c{flex:none;color:#6E5228;transition:transform .2s}
 .nx .cp-pick[aria-expanded="true"] .cp-pick-c{transform:rotate(180deg)}
-.nx .cp-menu{margin-top:8px;display:grid;gap:4px;background:#FBF8EE;
-  border:1px solid rgba(89,77,10,.32);border-radius:2px;padding:6px;max-width:340px}
+/* R3 (Justin item 1): the menu OVERLAYS the section instead of pushing it */
+.nx .cp-menu{position:absolute;top:calc(100% + 6px);left:0;width:100%;max-width:340px;z-index:40;
+  display:grid;gap:4px;background:#FBF8EE;border-radius:2px;padding:6px;
+  box-shadow:0 6px 8px rgba(41,50,24,.22)}
 .nx .cp-menu[hidden]{display:none}
 .nx .cp-opt{display:flex;align-items:center;gap:10px;width:100%;
   background:transparent;border:1px solid transparent;border-radius:2px;padding:10px 11px;cursor:pointer;
@@ -1839,12 +1843,10 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 50px)}
 #fac .fac-bthumb{width:76px;height:64px;flex:0 0 auto;display:block}
 #fac .fac-bthumb img{width:100%;height:100%;object-fit:cover;opacity:.88;display:block}
 #fac .fac-btn-name{font-family:var(--fd);font-size:16px;font-weight:500}
+/* R3: the R1 two-column grid on #fac .wrap is retired — .fac-grid owns the
+   plan/render split now, so the wrap flows normally. */
 @media(min-width:1024px){
-  #fac .wrap{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:26px;align-items:start}
-  #fac .center{grid-column:1/-1}
   #fac .fac-map-wrap{margin:0}
-  #fac .fac-btns{display:flex;flex-direction:column;gap:12px;margin:0}
-  #fac .fac-detail{grid-column:1/-1}
 }
 @media(max-width:1023px){
   #fac .fac-btns{display:flex;overflow-x:auto;gap:10px;scrollbar-width:none;
@@ -1884,10 +1886,13 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 50px)}
 /* item 16: quick form split */
 .qx{display:grid;gap:26px}
 @media(min-width:1024px){.qx{grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}}
-.qx-points{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.qx-points span{display:inline-flex;align-items:center;padding:7px 13px;border-radius:999px;
-  border:1px solid rgba(178,137,87,.4);font:600 12px/1.4 var(--fb);color:var(--cream2-fg)}
-.qx-points span::before{content:"\2713";color:var(--copper3-fg);margin-right:7px;font-weight:700}
+/* R3 (Justin item 2): one point per row, a clear gap between tick and text.
+   The old rules styled the empty span as a pill, leaving the text orphaned. */
+.qx-points{display:grid;gap:12px;margin-top:18px;justify-items:start}
+.qx-points div{display:flex;align-items:center;gap:12px;font:600 13.5px/1.5 var(--fb);color:var(--cream2-fg)}
+.qx-points div span{flex:none;width:26px;height:26px;border-radius:50%;
+  border:1px solid rgba(178,137,87,.55);display:inline-flex;align-items:center;justify-content:center}
+.qx-points div span::before{content:"\2713";color:var(--copper3-fg);font-weight:700;font-size:12px;line-height:1}
 </style>
 <style>
 /* ============ round 3 fixes, 2026-08-14 ============ */
@@ -2397,7 +2402,12 @@ h1{letter-spacing:.005em}
 .chp-story{background:rgba(31,38,18,.90)}
 .chp-story b{color:#D8CB9F}
 .chp-story p{color:#E8E2CE}
-.chp-hint{color:#D8CB9F;background:rgba(31,38,18,.72);border-color:rgba(216,203,159,.4)}
+/* R3 (Justin item 3): the chip was unreadable because .chp-card span
+   (specificity 0,1,1) recoloured it dark — match that specificity. */
+.chp-card .chp-hint{color:#F0E4D1;opacity:1;background:rgba(31,38,18,.88);border:1px solid rgba(216,203,159,.6);
+  font-size:11px;padding:8px 12px;letter-spacing:.14em;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.chp-hint::before{content:'';width:6px;height:6px;border-radius:50%;background:#D8CB9F;
+  display:inline-block;margin-right:8px;vertical-align:1px}
 @media(hover:hover) and (pointer:fine){
   .chp-grid--story .chp-card:hover .chp-story{opacity:1;pointer-events:auto}
   .chp-grid--story .chp-card:hover figcaption,
@@ -2430,6 +2440,22 @@ h1{letter-spacing:.005em}
 .city-body .sdesc{color:var(--forest);max-width:760px;margin:0 auto 30px}
 /* R2 QA: kill the inherited 1:1 130px tiles — they left holes between cards */
 .city-item{max-width:none;aspect-ratio:auto}
+
+/* ---------- R3 additions ------------------------------------------------- */
+/* item 6: anchor the gallery arrows to the strip's own wrap */
+#gallery .wrap{position:relative}
+#gallery .gal{cursor:grab}
+#gallery .gal.is-grabbing{cursor:grabbing}
+/* item 7: four USP tiles read 2 x 2, not 3 + 1 */
+#interiors .fit{grid-template-columns:repeat(2,1fr) !important}
+#interiors .fit>div{grid-column:auto !important}
+/* item 13: the Figma page-ground texture (keyplan board silk + rays), fixed
+   behind every transparent section */
+body::before{content:'';position:fixed;inset:0;z-index:-1;
+  background:#F5F0DF url('assets/bg-page-texture.webp') center top/cover no-repeat}
+/* item 13: the layered wave motif on the location band's foot */
+.loc-hero::after{content:'';position:absolute;right:-60px;bottom:-80px;width:min(52%,560px);aspect-ratio:973/938;
+  background:url('assets/deco-waves.webp') no-repeat center/contain;opacity:.22;pointer-events:none;z-index:1}
 .city-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
   background:rgba(89,77,10,.16);border:1px solid rgba(89,77,10,.16);
   max-width:1000px;margin:0 auto}
@@ -2439,15 +2465,52 @@ h1{letter-spacing:.005em}
 /* R2 QA: 7 items in a 4-col grid left a bare tile — the last item takes it */
 @media(min-width:640px){.city-item:last-child{grid-column:span 2}}
 
-/* ---------- FACILITIES: plan crop + Level 9 block ----------------------- */
-.fac-map-img{aspect-ratio:auto !important;height:auto !important;background:#1E1E1E;cursor:zoom-in}
+/* ---------- FACILITIES (R3): board layout + on-the-spot zoom ------------- */
+.fac-map-img{aspect-ratio:auto !important;height:auto !important;background:#1E1E1E;overflow:hidden;position:relative}
 .fac-map-img img.fac-base{position:relative !important;display:block;width:100%;height:auto}
-/* R2: tap-to-enlarge chip on both plans (they open in the zoom lightbox) */
-.fac-zoom{position:absolute;top:12px;right:12px;z-index:3;display:inline-flex;align-items:center;gap:6px;
-  padding:7px 11px;border-radius:2px;background:rgba(31,38,18,.8);border:1px solid rgba(216,203,159,.4);
-  font:600 11px/1.2 var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#E8E2CE;pointer-events:none}
-.fac-l9-img{position:relative;cursor:zoom-in;background:#1E1E1E}
-.fac-l9-img img{margin:0 auto;max-width:520px}
+/* the full-screen chip is now a real button */
+.fac-zoom{position:absolute;top:12px;right:12px;z-index:6;display:inline-flex;align-items:center;gap:6px;
+  padding:8px 12px;border-radius:2px;background:rgba(31,38,18,.85);border:1px solid rgba(216,203,159,.5);
+  font:600 11px/1.2 var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#F0E4D1;cursor:pointer}
+.fac-zoom:hover{background:rgba(31,38,18,.96)}
+.fac-zoom:focus-visible{outline:2px solid #D8CB9F;outline-offset:2px}
+/* in-place zoom controls (Aria R4 engine, Amaya palette) */
+.fz-ctl{position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;gap:8px;z-index:6}
+.fz-btn{width:42px;height:42px;border-radius:50%;border:1px solid rgba(89,77,10,.4);
+  background:rgba(251,248,238,.94);color:#463D03;display:grid;place-items:center;cursor:pointer;
+  transition:background .18s}
+.fz-btn:hover{background:#F0E4D1}
+.fz-btn:focus-visible{outline:2px solid #584D04;outline-offset:2px}
+[data-zoom-surface]{position:relative;overflow:hidden}
+[data-zoom-surface] img.fac-base{will-change:transform}
+/* the Figma board grid: plan left, render + categories right */
+.fac-grid{display:grid;gap:16px;margin-bottom:24px}
+@media(min-width:1024px){.fac-grid{grid-template-columns:1.35fr 1fr;gap:20px;align-items:stretch}}
+.fac-map-wrap{margin:0}
+.fac-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.fac-render{position:relative;margin:0;overflow:hidden;border-radius:14px;flex:0 0 auto}
+.fac-render img{display:block;width:100%;height:220px;object-fit:cover}
+@media(min-width:1280px){.fac-render img{height:250px}}
+.fac-render figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
+  font:600 12.5px/1.4 var(--fb);color:#fff;letter-spacing:.04em;
+  background:linear-gradient(180deg,transparent 0%,rgba(31,38,18,.78) 100%)}
+@media(min-width:1024px){
+  #fac .fac-side .fac-btns{display:flex;flex-direction:column;gap:10px;margin:0;flex:1;justify-content:space-between}
+}
+/* Level 9 board: full width, media large */
+.fac-l9{display:block}
+.fac-l9-head{margin-bottom:18px}
+.l9-legend{grid-template-columns:repeat(2,1fr) !important}
+@media(min-width:860px){.l9-legend{grid-template-columns:repeat(3,1fr) !important}}
+.fac-l9-media{display:grid;gap:16px}
+@media(min-width:860px){.fac-l9-media{grid-template-columns:1.15fr 1fr;align-items:stretch}}
+.fac-l9-render{position:relative;margin:0;overflow:hidden;border-radius:14px}
+.fac-l9-render img{display:block;width:100%;height:100%;min-height:300px;object-fit:cover}
+.fac-l9-render figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
+  font:600 12.5px/1.4 var(--fb);color:#fff;letter-spacing:.04em;
+  background:linear-gradient(180deg,transparent 0%,rgba(31,38,18,.78) 100%)}
+.fac-l9-img{position:relative;background:#1E1E1E;border-radius:14px;overflow:hidden}
+.fac-l9-img img{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
 /* R2: the Figma kumiko line pattern as a quiet corner texture on the band */
 #fac::before{content:'';position:absolute;right:-40px;bottom:-60px;width:300px;height:500px;z-index:0;
   background:url('assets/deco-kumiko.webp') no-repeat center/contain;opacity:.16;pointer-events:none}
@@ -2870,17 +2933,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="stl">Facilities that bring experience to living</h2>
       <p class="sdesc">34 facilities on Level 8, and more on Level 9. Discover a harmonious blend of intimate privacy, vibrant energy, and meaningful connection, masterfully layered throughout the entire development.</p>
     </div>
-    <!-- R2: photo-swap hover layers removed (they hid the plan under stretched
-         photos); the plan is now a tight Figma crop and clicks into the zoom
-         lightbox (Justin item 3). -->
-    <div class="fac-map-wrap fi">
-      <div class="fac-map-img" data-fp-zoom data-full="assets/fac-plan8-full.webp" role="button" tabindex="0" aria-label="Enlarge the Level 8 facilities plan">
-        <span class="unit-zoom fac-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
-        <img src="assets/fac-plan8-hd.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="1600" height="1580">
+    <!-- R3 (Justin items 4 + 12): the Figma facilities-board composition —
+         plan left, pool render right — with ON-THE-SPOT zoom on the plan
+         (buttons, double-click, pinch, drag-pan) plus the full-screen chip. -->
+    <div class="fac-grid fi">
+      <div class="fac-map-wrap">
+        <div class="fac-map-img" data-zoom-surface>
+          <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/fac-plan8-full.webp" aria-label="Open the Level 8 facilities plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
+          <div class="fz-ctl">
+            <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+            <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+            <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
+          </div>
+          <img src="assets/fac-plan8-hd.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="1600" height="1580">
+        </div>
       </div>
-    </div>
-
-    <div class="fac-btns">
+      <div class="fac-side">
+        <figure class="fac-render">
+          <img src="assets/fac-pool-render.webp" alt="Infinity pool on the Level 8 podium, artist impression" width="1348" height="564">
+          <figcaption>Infinity Pool, Level 8 Podium</figcaption>
+        </figure>
+        <div class="fac-btns">
       <div class="fac-btn active" data-layer="fac-water" data-cat="water" onclick="pickFac(this,'fac-water','water')"><span class="fac-bthumb"><img src="assets/fac-pool.png" alt=""></span>
         <span class="fac-btn-dot" style="background:#4CADE8"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Water &amp; Deck</div><div class="fac-btn-count">5 facilities &middot; Infinity Pool &middot; Jacuzzi</div></div>
@@ -2897,7 +2970,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="fac-btn-dot" style="background:#B28957"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Social &amp; Leisure</div><div class="fac-btn-count">12 facilities &middot; Co-dining &middot; KTV &middot; BBQ</div></div>
       </div>
-    </div>
+        </div><!-- /fac-btns -->
+      </div><!-- /fac-side -->
+    </div><!-- /fac-grid -->
 
     <div class="fac-detail open" id="fac-detail-water" data-cat="water">
       <div class="fac-detail-head"><span class="fac-detail-dot" style="background:#4CADE8"></span><div><div class="fac-detail-title">Water &amp; Deck</div><div class="fac-detail-sub">5 facilities</div></div></div>
@@ -2916,17 +2991,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="fac-detail-list"><li>Tea House</li><li>Lounge Room</li><li>KTV Room</li><li>Games Room</li><li>Co-Working Room</li><li>Kids Room</li><li>Pantry</li><li>Multipurpose Hall (Pickleball court, Community Hall)</li><li>Co-Dining Room</li><li>Co-Dining Kitchen</li><li>BBQ Area</li><li>Kids Playground</li></ul>
     </div>
 
+    <!-- R3 (Justin items 5 + 12): Level 9 Podium as a full-width board, the
+         Figma composition — big render + big plan, legend under the title. -->
     <div class="fac-l9 rv">
-      <div class="fac-l9-body">
-        <h3>Access on Level 9 to the elevated Zen Forest</h3>
-        <ul class="fac-detail-list">
+      <div class="fac-l9-head">
+        <h3>Level 9 Podium: the elevated Zen Forest</h3>
+        <ul class="fac-detail-list l9-legend">
+          <li>Access on Level 9 to the Zen Elevated Garden</li>
           <li>Elevated Zen Garden</li><li>Zen Garden</li><li>Zen Walkway</li>
           <li>Kumiko Floating Deck</li><li>Seaview Lounge</li>
         </ul>
       </div>
-      <div class="fac-l9-img" data-fp-zoom data-full="assets/fac-plan9-hd.webp" role="button" tabindex="0" aria-label="Enlarge the Level 9 plan">
-        <span class="unit-zoom fac-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
-        <img src="assets/fac-plan9-hd.webp" alt="Level 9 Podium plan, elevated Zen Forest" width="887" height="1013">
+      <div class="fac-l9-media">
+        <figure class="fac-l9-render">
+          <img src="assets/zen-final.webp" alt="Zen Elevated Garden on Level 9, artist impression" width="1106" height="596">
+          <figcaption>Zen Elevated Garden, Level 9</figcaption>
+        </figure>
+        <div class="fac-l9-img" data-zoom-surface>
+          <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/fac-plan9-hd.webp" aria-label="Open the Level 9 plan full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
+          <div class="fz-ctl">
+            <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+            <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+            <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
+          </div>
+          <img src="assets/fac-plan9-hd.webp" alt="Level 9 Podium plan, elevated Zen Forest" class="fac-base" width="887" height="1013">
+        </div>
       </div>
     </div>
   </div>
@@ -3102,7 +3191,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button class="loc-cat" role="tab" aria-selected="false" data-cat="landmarks">Landmarks</button>
         </div>
         <div class="loc-list" id="locList"></div></div>
-      <p class="loc-note">Distances as published by the developer on m-amaya.com.my and in the M Amaya design kit.</p>
+      <!-- R3 (Justin item 8): source note removed; sourcing stays documented in
+           rebuild-direction.md -->
+
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(89,77,10,.18);display:flex;gap:10px;flex-wrap:wrap">
         <a href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener" class="btn btn-p" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Google Maps &rarr;</a>
         <a href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener" class="btn btn-s" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Open in Waze &rarr;</a>
@@ -3111,8 +3202,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     </div>
 
-    <div class="loc-map-bg" onclick="var i=this.querySelector('img');fpOpen(i.src,i.alt)">
-      <img src="assets/zenni-map.png" alt="M Amaya location map, Southbay City, Batu Maung, Penang" width="1243" height="1536">
+    <!-- R3 (Justin items 4 + 8): the map fits its frame (contain, no crop) and
+         zooms on the spot; the chip still opens it full screen. -->
+    <div class="loc-map-bg" data-zoom-surface>
+      <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/zenni-map.png" aria-label="Open the location map full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
+      <div class="fz-ctl">
+        <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+        <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
+      </div>
+      <img src="assets/zenni-map.png" alt="M Amaya location map, Southbay City, Batu Maung, Penang" class="fac-base" width="1243" height="1536">
     </div>
   </div>
 </section>
@@ -3131,17 +3230,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="sec sec-alt" id="developer">
   <div class="bg-deco left" aria-hidden="true"><img src="assets/mamaya-left-ray-fill.png" alt=""></div>
   <div class="wrap">
+    <!-- R3 (Justin item 9): cleaned to the M Aurora developer pattern — logo +
+         one line. Licence / APDL / MBPP details stay in the footer legal + FAQ. -->
     <div class="dev2 rv">
       <span class="eyebrow">The developer</span>
       <h2 class="dev2-h">This project is built by:</h2>
-      <div class="dev2-mark"><img src="assets/mahsing-logo.png" alt="Mah Sing Group Berhad" width="571" height="177"></div>
-      <p class="copy">Vienna View Development Sdn. Bhd. (728449-H), a wholly-owned subsidiary of Mah Sing Group Berhad, listed on the Main Market of Bursa Malaysia.</p>
-      <div class="dev2-tiles">
-        <div class="dev2-tile"><b>Bursa-listed</b><span>Mah Sing Group Berhad, Main Market</span></div>
-        <div class="dev2-tile"><b>Licence 12029/11-2027/1276(A)</b><span>Valid 11 Nov 2022 to 10 Nov 2027</span></div>
-        <div class="dev2-tile"><b>APDL 12029-4/05-2029/0365(N)-(S)</b><span>Valid 19 May 2026 to 22 Dec 2030</span></div>
-        <div class="dev2-tile"><b>MBPP approved</b><span>Building plan MBPP.OSC-PB1725/2025</span></div>
-      </div>
+      <div class="dev2-mark"><img src="assets/mahsing-logo.png" alt="Mah Sing. Reinvent Spaces. Enhance Life." width="571" height="177"></div>
+      <p class="copy dev2-sub">Vienna View Development Sdn. Bhd. (728449-H), a wholly-owned subsidiary of Mah Sing Group Berhad, listed on the Main Market of Bursa Malaysia.</p>
     </div>
   </div>
 </section>
@@ -3176,10 +3271,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="eyebrow">Come and see it</span>
         <h2>Book a <span class="em">sales gallery visit</span></h2>
         <p class="copy">Register below and our team will confirm a time with you. You can also reach us directly on WhatsApp or by phone.</p>
+        <!-- R3 (Justin item 10): two CTAs only — WhatsApp primary, Call as the
+             white secondary. Waze lives in the location panel above. -->
         <div class="visit-acts">
           <a class="btn btn-p" href="https://wa.me/60162479010?text=Hi!%20I%27d%20like%20to%20know%20more%20about%20M%20Amaya." target="_blank" rel="noopener">WhatsApp us</a>
           <a class="btn btn-s" href="tel:+6042024269">Call 04 2024 269</a>
-          <a class="btn btn-o" href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener">Open in Waze</a>
         </div>
       </div>
       <div class="form-card">
@@ -3218,9 +3314,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="git-hours">For further enquiries, please contact:
       <span><a href="tel:+6042024269">04 2024 269</a> &middot; Sales office 604-628 8188</span>
     </div>
+    <!-- R3 (Justin item 11): proper buttons instead of boxed text links -->
     <div class="git-maps">
-      <a class="git-map" href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener">Google Maps</a>
-      <a class="git-map" href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener">Waze</a>
+      <a class="btn btn-p" href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener">Google Maps</a>
+      <a class="btn btn-s" href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener">Open in Waze</a>
     </div>
   </div>
 </section>
@@ -4454,11 +4551,110 @@ window.mgmTrackLead = function (payload) {
      wheel / pinch / drag / button zoom. The flat #lb is gone. */
   function openLb(src,alt){ fpOpen(src,alt); }
   Array.prototype.forEach.call(document.querySelectorAll('[data-fp-zoom]'),function(el){
-    el.addEventListener('click',function(){
-      var i=el.querySelector('img');
-      fpOpen(el.getAttribute('data-full')||i.src,(i&&i.alt)||'Plan');
+    el.addEventListener('click',function(e){
+      e.stopPropagation();
+      var i=el.querySelector('img')||el.closest('[data-zoom-surface]')&&el.closest('[data-zoom-surface]').querySelector('img');
+      fpOpen(el.getAttribute('data-full')||(i&&i.src),(i&&i.alt)||'Plan');
     });
   });
+
+  /* R3 (Justin item 4): ON-THE-SPOT zoom for the facilities plans and the
+     location map (Aria R4 engine): buttons x1.5 steps to 4x, double-click /
+     double-tap 2.2x toggle, two-finger pinch, drag-pan when zoomed. The
+     full-screen chip keeps the click-to-lightbox path. */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-zoom-surface]'),function(box){
+    var img=box.querySelector('img.fac-base'); if(!img)return;
+    var s=1,tx=0,ty=0,active={},dragX=0,dragY=0,pinchD=0,pinchS=1;
+    img.style.transformOrigin='0 0';
+    function apply(){
+      img.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';
+      box.style.cursor=s>1?'grab':'default';
+      box.style.touchAction=s>1?'none':'pan-y';
+    }
+    function clamp(){
+      var r=box.getBoundingClientRect();
+      var minX=r.width-r.width*s, minY=r.height-r.height*s;
+      tx=Math.min(0,Math.max(minX,tx)); ty=Math.min(0,Math.max(minY,ty));
+    }
+    function zoomAt(f,cx,cy){
+      f=Math.min(4,Math.max(1,f));
+      var k=f/s;
+      tx=cx-k*(cx-tx); ty=cy-k*(cy-ty); s=f;
+      if(s===1){tx=0;ty=0;}
+      clamp(); apply();
+    }
+    function centreStep(d){
+      var r=box.getBoundingClientRect();
+      zoomAt(s*d,r.width/2,r.height/2);
+    }
+    box.querySelector('.fz-in').addEventListener('click',function(e){e.stopPropagation();centreStep(1.5);});
+    box.querySelector('.fz-out').addEventListener('click',function(e){e.stopPropagation();centreStep(1/1.5);});
+    box.querySelector('.fz-reset').addEventListener('click',function(e){e.stopPropagation();s=1;tx=0;ty=0;apply();});
+    box.addEventListener('dblclick',function(e){
+      if(e.target.closest('.fz-ctl')||e.target.closest('.fac-zoom'))return;
+      var r=box.getBoundingClientRect();
+      if(s>1){s=1;tx=0;ty=0;apply();}
+      else zoomAt(2.2,e.clientX-r.left,e.clientY-r.top);
+    });
+    box.addEventListener('pointerdown',function(e){
+      if(e.target.closest('.fz-ctl')||e.target.closest('.fac-zoom'))return;
+      active[e.pointerId]=e;
+      var keys=Object.keys(active);
+      if(keys.length===1&&s>1){
+        dragX=e.clientX-tx; dragY=e.clientY-ty;
+        box.setPointerCapture(e.pointerId); box.style.cursor='grabbing'; e.preventDefault();
+      }else if(keys.length===2){
+        var a=active[keys[0]],b=active[keys[1]];
+        pinchD=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY); pinchS=s;
+      }
+    });
+    box.addEventListener('pointermove',function(e){
+      if(!active[e.pointerId])return;
+      active[e.pointerId]=e;
+      var keys=Object.keys(active);
+      if(keys.length===2&&pinchD){
+        var a=active[keys[0]],b=active[keys[1]];
+        var d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+        var r=box.getBoundingClientRect();
+        zoomAt(pinchS*d/pinchD,(a.clientX+b.clientX)/2-r.left,(a.clientY+b.clientY)/2-r.top);
+        e.preventDefault();
+      }else if(keys.length===1&&s>1&&box.hasPointerCapture&&box.hasPointerCapture(e.pointerId)){
+        tx=e.clientX-dragX; ty=e.clientY-dragY; clamp(); apply(); e.preventDefault();
+      }
+    });
+    ['pointerup','pointercancel'].forEach(function(ev){
+      box.addEventListener(ev,function(e){
+        delete active[e.pointerId]; pinchD=0;
+        if(box.hasPointerCapture&&box.hasPointerCapture(e.pointerId))box.releasePointerCapture(e.pointerId);
+        box.style.cursor=s>1?'grab':'default';
+      });
+    });
+    apply();
+  });
+
+  /* R3 (Justin item 6): the gallery strip drags with the mouse on desktop;
+     the arrows and touch swipe stay. */
+  (function(){
+    var g=document.getElementById('gal'); if(!g)return;
+    var down=false,startX=0,startL=0,moved=0;
+    /* native image drag steals the gesture — disable it on the strip */
+    Array.prototype.forEach.call(g.querySelectorAll('img'),function(i){i.setAttribute('draggable','false');});
+    g.addEventListener('dragstart',function(e){e.preventDefault();});
+    g.addEventListener('mousedown',function(e){down=true;moved=0;startX=e.pageX;startL=g.scrollLeft;g.classList.add('is-grabbing');e.preventDefault();});
+    window.addEventListener('mousemove',function(e){
+      if(!down)return;
+      var dx=e.pageX-startX; moved=Math.max(moved,Math.abs(dx));
+      g.scrollLeft=startL-dx;
+      if(moved>4)e.preventDefault();
+    });
+    window.addEventListener('mouseup',function(){down=false;g.classList.remove('is-grabbing');});
+    /* swallow the click that ends a drag so the lightbox doesn't open */
+    g.addEventListener('click',function(e){if(moved>6){e.stopPropagation();e.preventDefault();moved=0;}},true);
+    /* the mouse wheel scrolls the strip horizontally too */
+    g.addEventListener('wheel',function(e){
+      if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){g.scrollLeft+=e.deltaY;e.preventDefault();}
+    },{passive:false});
+  })();
   Array.prototype.forEach.call(document.querySelectorAll('#gal figure'),function(f){
     f.addEventListener('click',function(){var i=f.querySelector('img');openLb(f.getAttribute('data-full')||i.src,i.alt);});
   });
