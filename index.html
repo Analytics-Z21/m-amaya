@@ -382,19 +382,42 @@ h2.stl{font-family:var(--fd);font-size:28px;font-weight:400;color:var(--cream-fg
 
 /* ===== HERO ===== */
 .hero{position:relative;background:var(--navy-bg);overflow:hidden}
-.hero-media{position:relative;width:100%;
-  /* Height is capped at 200vw because the artwork is a 1:2 portrait. Fitting it to WIDTH
-     (below) is non-negotiable:its "Tower B Open for Sale" and "Tower A Limited Unit"
-     labels are baked in only 1.3% from the left edge and 4.0% from the right, so any
-     horizontal crop clips them. `cover` cropped ~2% a side and `auto 107%` cropped ~5.8%.
-     Capping at 200vw means the image always covers the box, so fitting to width leaves
-     no gap to paper over and no seam. Taller viewports simply see the section below. */
-  min-height:min(calc(100svh - var(--hero-top)), 200vw);
-  background:url('assets/mamaya-facade-scaled.png') center bottom/100% auto no-repeat,#EDE4CE}
-@media(min-width:1024px){.hero-media{aspect-ratio:auto;min-height:calc(100svh - 20px)}}
-.hero-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(31,38,18,.1) 92%,var(--dark-bg) 100%);pointer-events:none;z-index:2}
-@media(min-width:1024px){.hero-media{background:url('assets/mamaya-facade-scaled.png') right 80%/cover no-repeat,var(--navy-bg)}.hero-media::after{background:linear-gradient(90deg,rgba(31,38,18,.2) 0%,rgba(31,38,18,.08) 30%,transparent 55%);z-index:2}}
-@media(min-width:1024px){.hero-media{min-height:calc(100svh - 20px)}}
+/* R2: Aurora-pattern hero — crossfading render slides under a dark olive scrim.
+   Both viewports read light type over the imagery; no more cream-ground text. */
+.hero-media{position:relative;width:100%;min-height:min(calc(100svh - var(--hero-top)),210vw);
+  background:var(--dark-bg);display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:1024px){.hero-media{min-height:calc(100svh - 20px);display:block}}
+.hero-art{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;
+  background-position:center 38%;background-size:cover;background-repeat:no-repeat;
+  transition:opacity 1.2s ease;transform-origin:50% 60%}
+.hero-art.on{opacity:1}
+@keyframes heroDrift{from{transform:scale(1.06)}to{transform:scale(1)}}
+@media(prefers-reduced-motion:no-preference){html.js .hero-art.on{animation:heroDrift 7.5s ease-out both}}
+.hs-1{background-image:url('assets/hero-facade-mob.webp');background-position:center 30%}
+.hs-2{background-image:url('assets/gal-aerial-2x.webp');background-position:center 55%}
+.hs-3{background-image:url('assets/gal-pool1-2x.webp');background-position:center 65%}
+.hs-4{background-image:url('assets/gal-zen-2x.webp');background-position:center 50%}
+@media(min-width:1024px){
+  .hs-1{background-image:url('assets/gal-facade-full.webp');background-position:center 28%}
+  .hs-2{background-image:url('assets/gal-aerial-full.webp');background-position:center 60%}
+  .hs-3{background-image:url('assets/gal-pool1-full.webp');background-position:center 70%}
+  .hs-4{background-image:url('assets/gal-zen-full.webp');background-position:center 55%}
+}
+.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(31,38,18,.62) 0%,rgba(31,38,18,.34) 26%,rgba(31,38,18,.30) 46%,rgba(31,38,18,.62) 72%,rgba(31,38,18,.94) 100%)}
+@media(min-width:1024px){.hero-scrim{
+  background:linear-gradient(90deg,rgba(31,38,18,.88) 0%,rgba(31,38,18,.62) 38%,rgba(31,38,18,.18) 64%,rgba(31,38,18,.10) 100%),
+  linear-gradient(180deg,rgba(31,38,18,.30) 0%,transparent 24%,transparent 82%,var(--dark-bg) 100%)}}
+/* slide controls (Aurora .h-slides) */
+.h-slides{position:absolute;right:var(--pad);bottom:14px;z-index:4;display:flex;align-items:center;gap:14px}
+@media(min-width:1024px){.h-slides{bottom:24px}}
+.h-slide-cap{font:600 11px/1.4 var(--fm);letter-spacing:.18em;text-transform:uppercase;
+  color:#E8E2CE;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.h-dots{display:flex;gap:6px}
+.h-dot{position:relative;width:34px;height:28px;padding:0;border:none;background:none;cursor:pointer}
+.h-dot::after{content:'';position:absolute;left:2px;right:2px;top:12.5px;height:3px;background:rgba(240,228,209,.38);transition:background .3s}
+.h-dot.on::after{background:#D8CB9F}
+.h-dot:hover::after{background:#F0E4D1}
 .scroll-ind{display:none}
 @media(min-width:768px){.scroll-ind{display:flex;align-items:center;justify-content:center;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:36px;height:36px;z-index:4;cursor:pointer;text-decoration:none}}
 .scroll-arrow{width:14px;height:14px;border-right:2px solid var(--copper3-br);border-bottom:2px solid var(--copper3-br);transform:rotate(45deg);animation:scrollBlink 1.8s ease-in-out infinite}
@@ -504,6 +527,12 @@ h2.stl{font-family:var(--fd);font-size:28px;font-weight:400;color:var(--cream-fg
 .bg-deco.right{right:0;top:0;width:min(40%,460px);max-width:460px}
 .bg-deco.bottom-right{right:0;bottom:0;top:auto;width:min(38%,420px)}
 .bg-deco img{width:100%;height:auto;display:block}
+/* R2: the light rays breathe — a slow drift, transform/opacity only */
+@keyframes rayDrift{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(14px) scale(1.02)}}
+@media(prefers-reduced-motion:no-preference){
+  html.js .bg-deco img{animation:rayDrift 14s ease-in-out infinite}
+  html.js .bg-deco.right img{animation-delay:-7s}
+}
 .sec-mid > .wrap,.sec > .wrap{position:relative;z-index:1}
 
 /* ===== RTS / CROSS-BORDER ===== */
@@ -771,7 +800,10 @@ h2.stl{font-family:var(--fd);font-size:28px;font-weight:400;color:var(--cream-fg
 @media(min-width:1024px){.loc-map-bg{order:1;aspect-ratio:auto;max-height:none;height:100%;align-self:stretch}}
 .loc-map-bg img{width:100%;height:100%;display:block;object-fit:cover;object-position:center right;transform:scale(1.2);transform-origin:center center;filter:drop-shadow(0 20px 40px rgba(0,0,0,.3))}
 @media(min-width:1024px){.loc-map-bg img{transform:scale(1.1);object-position:center center}}
-.loc-panel{background:rgba(31,38,18,.55);backdrop-filter:blur(12px);border:1px solid rgba(178,137,87,.18);border-radius:16px;padding:26px 22px}
+/* R2 QA (Justin item 5): the translucent dark panel over the beige band read
+   as muddy olive with washed-out rows — re-carded light, dark ink. */
+.loc-panel{background:#FBF8EE;border:1px solid rgba(89,77,10,.22);border-radius:16px;padding:26px 22px;
+  box-shadow:0 10px 30px rgba(89,77,10,.08)}
 @media(min-width:1024px){.loc-panel{padding:32px 28px}}
 .am-tabs{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;scrollbar-width:none;padding-bottom:4px;flex-wrap:wrap}
 .am-tabs::-webkit-scrollbar{display:none}
@@ -1458,13 +1490,35 @@ html.js .nx .rv{opacity:1;transform:none;transition:none}
 .nx .cpick-btn strong{font:500 17px/1.2 var(--fd);color:var(--white-fg);white-space:nowrap}
 .nx .cpick-btn span{font:600 11.5px/1.3 var(--fb);color:var(--copper3-fg)}
 .nx .cout{background:#584D04;color:#F0E4D1;
-  padding:18px 20px;margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  padding:18px 20px;margin-top:18px;display:block;text-align:center}
 @media(min-width:1024px){
 .nx .cout{grid-column:1/-1;margin-top:0}
 }
 .nx .cout .l{font:600 11px/1.5 var(--fb);letter-spacing:.14em;text-transform:uppercase;opacity:.92}
 .nx .cout .v{font:500 clamp(26px,4vw,34px)/1.1 var(--fd);margin-top:3px}
-.nx .cout .s{font:600 13px/1.4 var(--fb);opacity:.94}
+/* R2: calculator price picker (Aurora cp-pick, restyled for the light panel) */
+.nx .cprice{margin-bottom:18px}
+@media(min-width:1024px){.nx .cprice{margin-bottom:0}}
+.nx .cprice .cl{display:block;font:600 11px/1.6 var(--fb);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cream2-fg);opacity:.82;margin-bottom:9px}
+.nx .cp-pick{display:flex;align-items:center;gap:12px;width:100%;max-width:340px;
+  background:#FBF8EE;border:1px solid rgba(89,77,10,.32);border-radius:2px;
+  padding:11px 14px;cursor:pointer;font-family:var(--fb);transition:border-color .16s,background .16s}
+.nx .cp-pick:hover{border-color:var(--olive);background:#fff}
+.nx .cp-pick b{font:500 19px/1.2 var(--fd);color:var(--gold2-fg);white-space:nowrap}
+.nx .cp-pick-t{font:600 11px/1.4 var(--fb);letter-spacing:.06em;text-transform:uppercase;color:#6E5228;margin-left:auto}
+.nx .cp-pick-c{flex:none;color:#6E5228;transition:transform .2s}
+.nx .cp-pick[aria-expanded="true"] .cp-pick-c{transform:rotate(180deg)}
+.nx .cp-menu{margin-top:8px;display:grid;gap:4px;background:#FBF8EE;
+  border:1px solid rgba(89,77,10,.32);border-radius:2px;padding:6px;max-width:340px}
+.nx .cp-menu[hidden]{display:none}
+.nx .cp-opt{display:flex;align-items:center;gap:10px;width:100%;
+  background:transparent;border:1px solid transparent;border-radius:2px;padding:10px 11px;cursor:pointer;
+  text-align:left;font-family:var(--fb);transition:background .16s,border-color .16s}
+.nx .cp-opt:hover{background:rgba(89,77,10,.08);border-color:rgba(89,77,10,.24)}
+.nx .cp-opt[aria-selected="true"]{background:rgba(89,77,10,.12);border-color:var(--olive)}
+.nx .cp-opt-p{font:500 15px/1.3 var(--fd);color:var(--gold2-fg);white-space:nowrap}
+.nx .cp-opt-d{font:600 11px/1.4 var(--fb);letter-spacing:.04em;text-transform:uppercase;color:#6E5228;margin-left:auto}
 .nx .cnote{font-family:var(--fc);font-size:12px;line-height:1.65;color:var(--cream2-fg);opacity:.72;margin-top:14px}
 @media(min-width:1024px){
 .nx .cnote{grid-column:1/-1;margin-top:0}
@@ -2021,7 +2075,11 @@ a.nav-reg:hover{background:#463D03}
 /* mobile:a peek-scroll row, like the facilities strip. Same card size, the next
    slide shows at the edge, scrolls left and right with snap. */
 @media(max-width:759px){
-  .chp-grid{display:grid;grid-auto-flow:column;grid-auto-columns:76%;gap:12px;
+  /* R2 fix: grid-template-columns:none is load-bearing. The base .chp-grid--3
+     rule defines ONE explicit 1fr track; under grid-auto-flow:column the first
+     card lands in it and collapses to ~2px while cards 2+ get the 76% implicit
+     track. Present since the MGM source (check MGM live). */
+  .chp-grid{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:76%;gap:12px;
     overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:8px}
   .chp-grid::-webkit-scrollbar{display:none}
   .chp-grid .chp-card{scroll-snap-align:start}
@@ -2093,91 +2151,55 @@ a.nav-reg:hover{background:#463D03}
    or the old 1:2 portrait hero artwork. Colour roles come from :root.
    ========================================================================== */
 
-/* ---------- HERO -------------------------------------------------------- */
-/* M Amaya's hero CGI (mamaya-facade-scaled.png) is 2560x2038, landscape.
-   MGM capped .hero-media at 200vw for a portrait tower render; that cap leaves
-   a metre of empty ivory above the image here. Replaced with a viewport-height
-   block, the CGI anchored bottom, and an ivory scrim carrying the type. */
-.hero{background:var(--ivory)}
-.hero-media{
-  aspect-ratio:auto !important;
-  height:auto !important;
-  max-height:none !important;
-  min-height:100svh;
-  background:
-    linear-gradient(180deg,
-      rgba(245,240,223,.97) 0%,
-      rgba(245,240,223,.94) 30%,
-      rgba(245,240,223,.62) 47%,
-      rgba(245,240,223,.10) 62%,
-      rgba(245,240,223,0) 74%),
-    url('assets/mamaya-facade-scaled.png') center bottom / 128% auto no-repeat,
-    var(--ivory) !important;
-}
-.hero-body{justify-content:flex-start}
-.hero-inner{padding-top:6px}
+/* ---------- HERO (R2: Aurora carousel, dark scrim) ----------------------- */
+/* Type reads light over the render slides on BOTH viewports. R1's ivory-scrim
+   treatment left STARTING FROM / TO SECOND BRIDGE unreadable on mobile. */
+.hero{background:var(--dark-bg)}
 .h-tag{
-  color:var(--forest);
-  background:rgba(255,255,255,.55);
-  border:1px solid rgba(89,77,10,.28);
+  color:#F0E4D1;
+  background:rgba(31,38,18,.44);
+  border:1px solid rgba(216,203,159,.34);
   -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  text-shadow:0 1px 6px rgba(0,0,0,.5);
 }
-.h-tag .dot{background:var(--bronze)}
-.h-place{color:var(--forest);text-shadow:none;font-weight:600}
-.h-place svg{color:var(--bronze)}
-.h-card-lab{color:#E4D5AE;font-family:var(--fc);text-transform:uppercase;letter-spacing:.12em;font-size:11px}
-.h-card-val{color:var(--olive)}
-.h-card-sub{color:#E8E2CE}
-.h-card{border-left-color:rgba(89,77,10,.24)}
-h1 em{color:#A0703A;font-style:normal}
-.scroll-arrow{border-color:var(--bronze)}
+.h-tag .dot{background:#3BB273}
+.h-place{color:#F0E4D1;text-shadow:0 1px 8px rgba(0,0,0,.6);font-weight:500}
+.h-place svg{color:#D8CB9F}
+.hero h1{color:#F5F0DF;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.hero h1 em{color:#D8B98A}
+h1 em{font-style:normal}
+.h-card-lab{color:#D8CB9F;font-family:var(--fm);text-transform:uppercase;letter-spacing:.14em;
+  font-size:11px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.65)}
+.h-card-val{color:#F5F0DF;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+.h-card-val .h-card-ast{color:#D8CB9F}
+.h-card-sub{color:#D9D2B8;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.h-cards{border-block:1px solid rgba(240,228,209,.22);padding:12px 0}
+.h-card+.h-card{border-left-color:rgba(240,228,209,.26)}
+.scroll-arrow{border-color:#D8CB9F}
+/* The olive M AMAYA lockup disappears on the dark slides: render it cream. */
+.h-logo img{filter:brightness(0) invert(1) drop-shadow(0 2px 12px rgba(0,0,0,.4));opacity:.96}
 
-/* Mobile fold: MGM pinned .hero-ctas to the bottom of .hero-body with
-   margin-top:auto. With a 100svh hero that drops them off a 390x844 screen.
-   They now follow the fact cards directly and the CGI takes the space below. */
+/* Mobile fold: content bottom-anchored over the slide, Aurora-style. */
 @media(max-width:1023px){
-  .hero-media{
-    min-height:100svh;
-    background:
-      linear-gradient(180deg,
-        rgba(245,240,223,.98) 0%,
-        rgba(245,240,223,.96) 34%,
-        rgba(245,240,223,.80) 45%,
-        rgba(245,240,223,.34) 55%,
-        rgba(245,240,223,.04) 66%,
-        rgba(245,240,223,0) 76%),
-      url('assets/mamaya-facade-scaled.png') center bottom / 165% auto no-repeat,
-      var(--ivory) !important;
-  }
-  .hero-body{padding:10px var(--pad) 0}
+  .hero-media{min-height:100svh}
+  .hero-body{padding:96px var(--pad) 56px;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
   .hero-inner{flex:0 0 auto}
-  .h-logo{margin-top:2px !important;margin-bottom:6px !important}
-  .h-logo img{max-width:132px;height:auto}
+  .h-logo{margin-top:0 !important;margin-bottom:8px !important}
+  .h-logo img{max-width:108px;height:auto}
   .hero-inner h1{font-size:clamp(30px,8.6vw,40px);line-height:1.12;margin-bottom:6px}
   .h-tag{margin-bottom:10px !important;font-size:11.5px}
   .h-place{margin-bottom:14px !important}
-  .h-cards{margin-bottom:14px !important}
+  .h-cards{margin-bottom:16px !important}
   .hero-ctas{margin-top:0 !important;padding-top:0 !important;margin-bottom:0}
   .scroll-ind{display:none}
 }
 
 @media(min-width:1024px){
-  .hero-media{
-    min-height:calc(100svh - 40px) !important;
-    background:
-      linear-gradient(100deg,
-        rgba(245,240,223,.97) 0%,
-        rgba(245,240,223,.93) 30%,
-        rgba(245,240,223,.55) 52%,
-        rgba(245,240,223,.06) 70%,
-        rgba(245,240,223,0) 84%),
-      url('assets/mamaya-facade-scaled.png') right center / cover no-repeat,
-      var(--ivory) !important;
-  }
+  .hero-media{min-height:calc(100svh - 40px) !important}
   .hero-body{justify-content:center;align-items:flex-start}
   .hero-inner{text-align:left;max-width:560px;margin:0}
   .h-logo{align-items:flex-start}
-  .h-cards{margin:0 0 22px;text-align:left}
+  .h-cards{margin:0 0 24px;text-align:left;display:inline-grid}
   .h-card:first-child{padding-left:0;border-left:none}
   .hero-ctas{margin:0;max-width:460px}
 }
@@ -2202,12 +2224,13 @@ h1 em{color:#A0703A;font-style:normal}
 .btn-o:hover{background:#fff}
 
 /* ---------- NAV, RAIL, DRAWER ------------------------------------------- */
-/* All three were drawn in cream for a dark ground. */
-.nav-rail a{color:rgba(41,50,24,.80);text-shadow:0 1px 6px rgba(245,240,223,.85)}
-.nav-rail a:hover{color:var(--olive)}
-.nav-rail a.on{color:var(--olive)}
-.hamburger span{background:var(--olive) !important}
-.nav.is-stuck .hamburger span,.nav.scrolled .hamburger span{background:var(--olive) !important}
+/* R2: the nav floats over the dark hero slides, so it reads light again;
+   .nav.is-scrolled already paints its own dark backdrop. */
+.nav-rail a{color:rgba(240,228,209,.88);text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.nav-rail a:hover{color:#F5F0DF}
+.nav-rail a.on{color:#D8CB9F}
+.hamburger span{background:#F0E4D1 !important}
+.nav-logo img{filter:brightness(0) invert(1);opacity:.95}
 .rail{
   background:rgba(245,240,223,.96);
   border-bottom:1px solid rgba(89,77,10,.18);
@@ -2245,6 +2268,17 @@ h1{letter-spacing:.005em}
 .sec-alt{background:linear-gradient(180deg,var(--plum2-bg) 0%,var(--plum-bg) 100%)}
 .footer{background:var(--forest-d);color:#B9B49B;border-top:1px solid rgba(240,228,209,.10)}
 .footer a{color:var(--champagne)}
+/* R2: Mah Sing CI footer bits (Aria implementation) */
+.ft-logo img{width:150px;height:auto;display:block}
+.ft-contact-lab{color:#C9C2A6}
+.ft-email{color:#D9D2B8}
+.ft-soc{border-color:rgba(240,228,209,.28);color:#E8E2CE}
+.ft-soc:hover{border-color:var(--champagne);background:rgba(216,203,159,.12);color:var(--champagne)}
+.ft-links{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+  max-width:var(--max);margin:18px auto 0;font:600 11.5px/1.5 var(--fb);letter-spacing:.06em;text-transform:uppercase}
+.ft-links span{color:rgba(240,228,209,.3)}
+.ft-link{color:var(--champagne);text-decoration:none;border:none;background:none;cursor:pointer}
+.ft-link:hover{color:#F0E4D1}
 .git{background:var(--beige);border-top:1px solid rgba(89,77,10,.16)}
 .form-card{background:#fff;border:1px solid rgba(89,77,10,.14);box-shadow:0 10px 40px rgba(89,77,10,.08)}
 .faq-item{border-bottom:1px solid rgba(89,77,10,.16)}
@@ -2352,6 +2386,25 @@ h1{letter-spacing:.005em}
 .usp span{font:400 12px/1.55 var(--fb);color:var(--tm-fg)}
 .chp-grid--3 .chp-card figcaption{color:#fff}
 
+/* ---------- STORY CH02 (R2): big visuals, tap-to-read overlays ----------- */
+/* The inherited .chp-story colours resolve to Amaya's LIGHT-theme tokens
+   (dark ink), which vanish on the dark overlay. Explicit light inks here. */
+.chp-grid--story .chp-card img{aspect-ratio:4/5}
+@media(min-width:560px){.chp-grid--story .chp-card img{aspect-ratio:4/5}}
+.chp-grid--story .chp-card figcaption b{color:#F0E4D1}
+.chp-grid--story .chp-card figcaption span{color:#D8CB9F}
+.chp-card--ray img{object-fit:contain;background:#1F2612;padding:8%}
+.chp-story{background:rgba(31,38,18,.90)}
+.chp-story b{color:#D8CB9F}
+.chp-story p{color:#E8E2CE}
+.chp-hint{color:#D8CB9F;background:rgba(31,38,18,.72);border-color:rgba(216,203,159,.4)}
+@media(hover:hover) and (pointer:fine){
+  .chp-grid--story .chp-card:hover .chp-story{opacity:1;pointer-events:auto}
+  .chp-grid--story .chp-card:hover figcaption,
+  .chp-grid--story .chp-card:hover .chp-hint{opacity:0}
+}
+.chp-grid--story .chp-card:focus-visible{outline:2px solid #D8CB9F;outline-offset:3px}
+
 /* ---------- ENCLAVES BAND ----------------------------------------------- */
 /* highway.jpg sits as a foot band; the copy stays on solid ivory above it. */
 .city-sec{
@@ -2375,17 +2428,30 @@ h1{letter-spacing:.005em}
 .city-body{position:relative;z-index:2;max-width:var(--max);margin:0 auto;text-align:center}
 .city-body h2{color:var(--olive)}
 .city-body .sdesc{color:var(--forest);max-width:760px;margin:0 auto 30px}
+/* R2 QA: kill the inherited 1:1 130px tiles — they left holes between cards */
+.city-item{max-width:none;aspect-ratio:auto}
 .city-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
   background:rgba(89,77,10,.16);border:1px solid rgba(89,77,10,.16);
   max-width:1000px;margin:0 auto}
 @media(min-width:640px){.city-grid{grid-template-columns:repeat(4,1fr)}}
 .city-item{background:var(--paper);padding:20px 14px 18px;text-align:center}
 .city-item:last-child{grid-column:1/-1}
-@media(min-width:640px){.city-item:last-child{grid-column:auto}}
+/* R2 QA: 7 items in a 4-col grid left a bare tile — the last item takes it */
+@media(min-width:640px){.city-item:last-child{grid-column:span 2}}
 
 /* ---------- FACILITIES: plan crop + Level 9 block ----------------------- */
-.fac-map-img{aspect-ratio:auto !important;height:auto !important}
+.fac-map-img{aspect-ratio:auto !important;height:auto !important;background:#1E1E1E;cursor:zoom-in}
 .fac-map-img img.fac-base{position:relative !important;display:block;width:100%;height:auto}
+/* R2: tap-to-enlarge chip on both plans (they open in the zoom lightbox) */
+.fac-zoom{position:absolute;top:12px;right:12px;z-index:3;display:inline-flex;align-items:center;gap:6px;
+  padding:7px 11px;border-radius:2px;background:rgba(31,38,18,.8);border:1px solid rgba(216,203,159,.4);
+  font:600 11px/1.2 var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#E8E2CE;pointer-events:none}
+.fac-l9-img{position:relative;cursor:zoom-in;background:#1E1E1E}
+.fac-l9-img img{margin:0 auto;max-width:520px}
+/* R2: the Figma kumiko line pattern as a quiet corner texture on the band */
+#fac::before{content:'';position:absolute;right:-40px;bottom:-60px;width:300px;height:500px;z-index:0;
+  background:url('assets/deco-kumiko.webp') no-repeat center/contain;opacity:.16;pointer-events:none}
+#fac .wrap{position:relative;z-index:1}
 .fac-l9{width:100%}
 .fac-l9 .fac-detail-list{grid-template-columns:repeat(2,1fr) !important}
 @media(min-width:520px){.fac-l9 .fac-detail-list{grid-template-columns:repeat(3,1fr) !important}}
@@ -2508,7 +2574,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- HERO -->
 <section class="hero" id="about">
-  <div class="hero-media">
+  <div class="hero-media" id="heroMedia" data-slide="1">
+    <!-- R2: Aurora-pattern crossfade carousel over the client's own renders.
+         Slides are CSS backgrounds so mobile/desktop art direction is pure CSS. -->
+    <div class="hero-art hs-1 on" aria-hidden="true"></div>
+    <div class="hero-art hs-2" aria-hidden="true"></div>
+    <div class="hero-art hs-3" aria-hidden="true"></div>
+    <div class="hero-art hs-4" aria-hidden="true"></div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="hero-body">
       <div class="hero-inner">
         <div class="h-logo">
@@ -2539,6 +2612,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="btn-s-t">721-1,432 sq.ft</span>
           </a>
         </div>
+      </div>
+    </div>
+    <div class="h-slides">
+      <span class="h-slide-cap" id="hCap">The Facade</span>
+      <div class="h-dots" role="tablist" aria-label="Hero slides">
+        <button class="h-dot on" data-hs="1" aria-label="The Facade"></button>
+        <button class="h-dot" data-hs="2" aria-label="Aerial View"></button>
+        <button class="h-dot" data-hs="3" aria-label="Infinity Pool"></button>
+        <button class="h-dot" data-hs="4" aria-label="Zen Elevated Garden"></button>
       </div>
     </div>
     <a href="#trust" class="scroll-ind" aria-label="Scroll down"><span class="scroll-arrow"></span></a>
@@ -2623,9 +2705,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="calc rv">
       <h3>What it costs a month</h3>
-      <div class="cfield">
-        <label for="cPrice2">Property price <output id="cPriceOut" class="num">RM 657,250</output></label>
-        <input type="range" id="cPrice2" min="657250" max="1139750" step="250" value="657250">
+      <!-- R2 (Justin): price is SELECTED, not slid — Aurora's cp-pick pattern.
+           Options are price points inside the published permit band, because
+           M Amaya releases no per-type pricing. Total interest removed. -->
+      <div class="cprice">
+        <span class="cl">Property price</span>
+        <button class="cp-pick" id="cpPick" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <b class="num" id="cPriceVal">RM 657,250*</b>
+          <span class="cp-pick-t" id="cPriceTag">Permit minimum</span>
+          <svg class="cp-pick-c" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="cp-menu" id="cpMenu" role="listbox" aria-label="Property price" hidden></div>
       </div>
       <div class="cfield">
         <label for="cLoan">Loan margin <output id="cLoanOut" class="num">RM 591,525 &middot; 90%</output></label>
@@ -2636,10 +2726,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <input type="range" id="cTen" min="20" max="35" step="1" value="35">
       </div>
       <div class="cout">
-        <div><div class="l">Estimated monthly</div><div class="v num" id="cMy">RM 2,619</div></div>
-        <div style="text-align:right"><div class="l">Total interest</div><div class="s num" id="cSg">RM 508,455</div></div>
+        <div class="l">Estimated monthly from</div>
+        <div class="v num" id="cMy">RM 2,619</div>
       </div>
-      <p class="cnote">Estimates only. Based on 3.6% p.a. interest rate over the selected tenure. The slider spans M Amaya's published price band of RM657,250 to RM1,139,750 for the development. Per-type pricing is released with the price list. Subject to bank approval. Not an offer.</p>
+      <p class="cnote">Estimates only. Based on 3.6% p.a. interest rate over the selected tenure. Price points span M Amaya's published permit band of RM657,250 to RM1,139,750 for the development. Per-type pricing is released with the price list. Subject to bank approval. Not an offer.</p>
     </div>
   </div>
 </section>
@@ -2745,18 +2835,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="wrap">
         <div class="chp-head"><span class="chp-no">02</span><span class="chp-kicker">Freehold and affordable</span></div>
         <h3>A quieter way of living, on freehold land</h3>
-        <div class="chp-grid chp-grid--3">
-          <figure class="chp-card">
-            <img src="assets/chair.jpg" alt="Calm interior with natural light">
-            <figcaption>Light-led interiors<span>Daylight, gentle views, breathable space</span></figcaption>
+        <!-- R2 (Justin item 4): big visuals with the story overlaid inside,
+             the live MGM tap-to-read pattern. Client renders + the Figma
+             ray-masked lamp interior replace the three stock photos. -->
+        <div class="chp-grid chp-grid--3 chp-grid--story">
+          <figure class="chp-card" tabindex="0">
+            <span class="chp-hint">Tap to read</span>
+            <img src="assets/gal-aerial-2x.webp" alt="Aerial view of M Amaya on Penang's southern shore">
+            <figcaption><b>Freehold, on the southern shore</b><span>Southbay City, Batu Maung</span></figcaption>
+            <div class="chp-story"><b>Yours, outright</b><p>833 freehold serviced apartments on a single hillside address in Southbay City. Built-ups of 721 to 1,432 sq. ft., from RM657,250* under the advertising permit.</p></div>
           </figure>
-          <figure class="chp-card">
-            <img src="assets/people-reading.jpg" alt="Residents reading in a quiet corner">
-            <figcaption>Room to pause<span>Spaces that let living feel unforced</span></figcaption>
+          <figure class="chp-card chp-card--ray" tabindex="0">
+            <span class="chp-hint">Tap to read</span>
+            <img src="assets/deco-ray-lamp.webp" alt="Kumiko pendant lamp in a quiet interior, framed by M Amaya's light-ray motif">
+            <figcaption><b>A dialogue of light</b><span>The design language</span></figcaption>
+            <div class="chp-story"><b>Light, by design</b><p>Homes designed to embrace natural daylight, gentle views and breathable spaces, so living feels intuitive, balanced and unforced.</p></div>
           </figure>
-          <figure class="chp-card">
-            <img src="assets/luxury-chair-bg.jpg" alt="Interior detailing">
-            <figcaption>Considered detail<span>Composure carried through the finish</span></figcaption>
+          <figure class="chp-card" tabindex="0">
+            <span class="chp-hint">Tap to read</span>
+            <img src="assets/gal-zen-2x.webp" alt="Zen Elevated Garden on Level 9">
+            <figcaption><b>A quieter way of living</b><span>Levels 8 and 9</span></figcaption>
+            <div class="chp-story"><b>Above the everyday</b><p>34 podium facilities on Level 8, and the elevated Zen Forest on Level 9: Zen Garden, Kumiko Floating Deck and the Seaview Lounge.</p></div>
           </figure>
         </div>
       </div>
@@ -2771,30 +2870,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="stl">Facilities that bring experience to living</h2>
       <p class="sdesc">34 facilities on Level 8, and more on Level 9. Discover a harmonious blend of intimate privacy, vibrant energy, and meaningful connection, masterfully layered throughout the entire development.</p>
     </div>
+    <!-- R2: photo-swap hover layers removed (they hid the plan under stretched
+         photos); the plan is now a tight Figma crop and clicks into the zoom
+         lightbox (Justin item 3). -->
     <div class="fac-map-wrap fi">
-      <div class="fac-map-img">
-        <img src="assets/fac-plan8-hd.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="2000" height="2185">
-        <img src="assets/fac-pool.png" alt="Infinity pool and deck" class="fac-layer" id="fac-water" width="1200" height="817">
-        <img src="assets/gal-playground-2x.webp" alt="Fitness and wellness" class="fac-layer" id="fac-fitness" width="1200" height="817">
-        <img src="assets/zen-final.webp" alt="Gardens and Zen forest" class="fac-layer" id="fac-gardens" width="1200" height="817">
-        <img src="assets/gal-bbq-2x.webp" alt="Social and leisure" class="fac-layer" id="fac-leisure" width="1200" height="818">
+      <div class="fac-map-img" data-fp-zoom data-full="assets/fac-plan8-full.webp" role="button" tabindex="0" aria-label="Enlarge the Level 8 facilities plan">
+        <span class="unit-zoom fac-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
+        <img src="assets/fac-plan8-hd.webp" alt="Level 8 Podium facilities plan" class="fac-base" id="fac-base" width="1600" height="1580">
       </div>
     </div>
 
     <div class="fac-btns">
-      <div class="fac-btn active" data-layer="fac-water" data-cat="water" onclick="pickFac(this,'fac-water','water')" onmouseenter="showFacLayer(this,'fac-water')" onmouseleave="resetFacLayer()"><span class="fac-bthumb"><img src="assets/fac-pool.png" alt=""></span>
+      <div class="fac-btn active" data-layer="fac-water" data-cat="water" onclick="pickFac(this,'fac-water','water')"><span class="fac-bthumb"><img src="assets/fac-pool.png" alt=""></span>
         <span class="fac-btn-dot" style="background:#4CADE8"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Water &amp; Deck</div><div class="fac-btn-count">5 facilities &middot; Infinity Pool &middot; Jacuzzi</div></div>
       </div>
-      <div class="fac-btn" data-layer="fac-fitness" data-cat="fitness" onclick="pickFac(this,'fac-fitness','fitness')" onmouseenter="showFacLayer(this,'fac-fitness')" onmouseleave="resetFacLayer()"><span class="fac-bthumb"><img src="assets/gal-playground-2x.webp" alt=""></span>
+      <div class="fac-btn" data-layer="fac-fitness" data-cat="fitness" onclick="pickFac(this,'fac-fitness','fitness')"><span class="fac-bthumb"><img src="assets/gal-playground-2x.webp" alt=""></span>
         <span class="fac-btn-dot" style="background:#8E8A4D"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Fitness &amp; Wellness</div><div class="fac-btn-count">7 facilities &middot; Gymnasium &middot; Yoga &middot; Sauna</div></div>
       </div>
-      <div class="fac-btn" data-layer="fac-gardens" data-cat="gardens" onclick="pickFac(this,'fac-gardens','gardens')" onmouseenter="showFacLayer(this,'fac-gardens')" onmouseleave="resetFacLayer()"><span class="fac-bthumb"><img src="assets/zen-final.webp" alt=""></span>
+      <div class="fac-btn" data-layer="fac-gardens" data-cat="gardens" onclick="pickFac(this,'fac-gardens','gardens')"><span class="fac-bthumb"><img src="assets/zen-final.webp" alt=""></span>
         <span class="fac-btn-dot" style="background:#4CAE7A"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Gardens &amp; Nature</div><div class="fac-btn-count">10 facilities &middot; Kumiko gardens &middot; Zen forest</div></div>
       </div>
-      <div class="fac-btn" data-layer="fac-leisure" data-cat="leisure" onclick="pickFac(this,'fac-leisure','leisure')" onmouseenter="showFacLayer(this,'fac-leisure')" onmouseleave="resetFacLayer()"><span class="fac-bthumb"><img src="assets/gal-bbq-2x.webp" alt=""></span>
+      <div class="fac-btn" data-layer="fac-leisure" data-cat="leisure" onclick="pickFac(this,'fac-leisure','leisure')"><span class="fac-bthumb"><img src="assets/gal-bbq-2x.webp" alt=""></span>
         <span class="fac-btn-dot" style="background:#B28957"></span>
         <div class="fac-btn-info"><div class="fac-btn-name">Social &amp; Leisure</div><div class="fac-btn-count">12 facilities &middot; Co-dining &middot; KTV &middot; BBQ</div></div>
       </div>
@@ -2825,36 +2924,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li>Kumiko Floating Deck</li><li>Seaview Lounge</li>
         </ul>
       </div>
-      <div class="fac-l9-img"><img src="assets/fac-plan9-hd.webp" alt="Level 9 Podium plan, elevated Zen Forest"></div>
+      <div class="fac-l9-img" data-fp-zoom data-full="assets/fac-plan9-hd.webp" role="button" tabindex="0" aria-label="Enlarge the Level 9 plan">
+        <span class="unit-zoom fac-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
+        <img src="assets/fac-plan9-hd.webp" alt="Level 9 Podium plan, elevated Zen Forest" width="887" height="1013">
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CGI GALLERY -->
 
-<!-- CGI LIGHTBOX -->
-<div class="cgi-lb" id="cgiLb">
-  <div class="cgi-lb-bar">
-    <button class="cgi-lb-close" id="cgiLbClose" aria-label="Close">✕</button>
-  </div>
-  <button class="cgi-lb-nav cgi-lb-prev" id="cgiLbPrev" aria-label="Previous">‹</button>
-  <div class="cgi-lb-stage">
-    <img class="cgi-lb-img" id="cgiLbImg" alt="Facility CGI render" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
-  </div>
-  <button class="cgi-lb-nav cgi-lb-next" id="cgiLbNext" aria-label="Next">›</button>
-  <div class="cgi-lb-count" id="cgiLbCount"></div>
-</div>
-
-<!-- INTERIOR SHOWCASE -->
-
-<!-- INTERIOR LIGHTBOX -->
-<div class="cgi-lb" id="intLb">
-  <div class="cgi-lb-bar"><button class="cgi-lb-close" id="intLbClose" aria-label="Close">✕</button></div>
-  <button class="cgi-lb-nav cgi-lb-prev" id="intLbPrev" aria-label="Previous">‹</button>
-  <div class="cgi-lb-stage"><img class="cgi-lb-img" id="intLbImg" alt="Interior view" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div>
-  <button class="cgi-lb-nav cgi-lb-next" id="intLbNext" aria-label="Next">›</button>
-  <div class="cgi-lb-count" id="intLbCount"></div>
-</div>
+<!-- R2: dead CGI / interior lightbox markup removed (their gallery tracks were
+     cut in R1; the fp-lb zoom lightbox is the single image viewer now) -->
 
 <!-- ILLUMINATED LIFESTYLE — 4 IKI PILLARS -->
 
@@ -3010,13 +3091,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="loc-panel fi">
+      <!-- R2: categories extended with the landmark, school, mall and hospital
+           distances from the client's own M Amaya design kit (area board). -->
       <div class="nx"><div class="loc-cats" id="locCats" role="tablist" aria-label="Nearby categories">
           <button class="loc-cat" role="tab" aria-selected="true" data-cat="transport">Transport</button>
           <button class="loc-cat" role="tab" aria-selected="false" data-cat="work">Work</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="shopping">Shopping</button>
+          <button class="loc-cat" role="tab" aria-selected="false" data-cat="malls">Malls</button>
+          <button class="loc-cat" role="tab" aria-selected="false" data-cat="schools">Schools</button>
+          <button class="loc-cat" role="tab" aria-selected="false" data-cat="health">Health</button>
+          <button class="loc-cat" role="tab" aria-selected="false" data-cat="landmarks">Landmarks</button>
         </div>
         <div class="loc-list" id="locList"></div></div>
-      <p class="loc-note">Distances as published by the developer on m-amaya.com.my.</p>
+      <p class="loc-note">Distances as published by the developer on m-amaya.com.my and in the M Amaya design kit.</p>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(89,77,10,.18);display:flex;gap:10px;flex-wrap:wrap">
         <a href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener" class="btn btn-p" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Google Maps &rarr;</a>
         <a href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener" class="btn btn-s" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Open in Waze &rarr;</a>
@@ -3047,7 +3133,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="wrap">
     <div class="dev2 rv">
       <span class="eyebrow">The developer</span>
-      <h2 class="dev2-h">This project is built by :</h2>
+      <h2 class="dev2-h">This project is built by:</h2>
       <div class="dev2-mark"><img src="assets/mahsing-logo.png" alt="Mah Sing Group Berhad" width="571" height="177"></div>
       <p class="copy">Vienna View Development Sdn. Bhd. (728449-H), a wholly-owned subsidiary of Mah Sing Group Berhad, listed on the Main Market of Bursa Malaysia.</p>
       <div class="dev2-tiles">
@@ -3139,25 +3225,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 <footer class="footer">
+  <!-- R2 (Justin item 6): Mah Sing CI footer, mirroring the Aria/MGM ver2
+       implementation — white corporate lockup on the dark band (the red logo
+       stays in #developer where the ground is light), corporate social set,
+       and the APDL | Privacy | Terms links row. -->
   <div class="ft-top">
     <div class="ft-logo">
-      <img src="assets/mamaya-mahsing-logo.png" alt="Mah Sing. Reinvent Spaces. Enhance Life." width="571" height="177">
+      <img src="assets/footer-logo.svg" alt="Mah Sing. Reinvent Spaces. Enhance Life." width="300" height="84">
     </div>
     <div class="ft-contact">
-      <div class="ft-contact-lab">For further enquiries, please contact:</div>
+      <div class="ft-contact-lab">For further enquiries, please contact us:</div>
       <a href="tel:+6042024269" class="ft-phone">04 2024 269</a>
       <a href="https://wa.me/60162479010?text=Hi!%20I%27d%20like%20to%20know%20more%20about%20M%20Amaya." class="ft-email" id="footWa" target="_blank" rel="noopener">WhatsApp the sales team</a>
     </div>
     <div class="ft-socials">
-      <a class="ft-soc" href="https://www.facebook.com/share/1Z28TrckHk/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.4 21v-8.1h2.7l.4-3.15h-3.1V7.74c0-.91.25-1.53 1.56-1.53h1.67V3.39A22.4 22.4 0 0 0 14.2 3.27c-2.42 0-4.07 1.48-4.07 4.19v2.29H7.42v3.15h2.71V21h3.27z"/></svg></a>
-      <a class="ft-soc" href="https://www.instagram.com/m_amaya_pg" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 5.67A4.17 4.17 0 1 0 12 16.17a4.17 4.17 0 0 0 0-8.34zm0 6.87a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4zm5.3-7.03a.97.97 0 1 1-1.95 0 .97.97 0 0 1 1.95 0z"/></svg></a>
+      <a class="ft-soc" href="https://www.facebook.com/mahsing" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.4 21v-8.1h2.7l.4-3.15h-3.1V7.74c0-.91.25-1.53 1.56-1.53h1.67V3.39A22.4 22.4 0 0 0 14.2 3.27c-2.42 0-4.07 1.48-4.07 4.19v2.29H7.42v3.15h2.71V21h3.27z"/></svg></a>
+      <a class="ft-soc" href="https://www.instagram.com/mahsinggroup/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 5.67A4.17 4.17 0 1 0 12 16.17a4.17 4.17 0 0 0 0-8.34zm0 6.87a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4zm5.3-7.03a.97.97 0 1 1-1.95 0 .97.97 0 0 1 1.95 0z"/></svg></a>
+      <a class="ft-soc" href="https://www.youtube.com/user/MahSingGroup" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M21.58 7.19a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.82.42A2.5 2.5 0 0 0 2.42 7.2 26.15 26.15 0 0 0 2 12a26.15 26.15 0 0 0 .42 4.81 2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.82-.42a2.5 2.5 0 0 0 1.76-1.77A26.15 26.15 0 0 0 22 12a26.15 26.15 0 0 0-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg></a>
+      <a class="ft-soc" href="https://www.linkedin.com/company/mah-sing-group-berhad/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.34 18.34H5.67v-8h2.67v8zM7 9.17a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zm11.34 9.17h-2.67v-3.89c0-.93-.02-2.12-1.29-2.12-1.3 0-1.5 1.01-1.5 2.05v3.96h-2.67v-8h2.56v1.09h.04c.36-.67 1.23-1.38 2.53-1.38 2.7 0 3.2 1.78 3.2 4.1v4.19z"/></svg></a>
     </div>
+  </div>
+  <div class="ft-links">
+    <a class="ft-link" href="#apdlLegal">APDL</a><span>|</span>
+    <a class="ft-link" href="https://www.mahsing.com.my/web/storage/2023/10/Privacy-PDP-Policy_RevOct2023-1.pdf" target="_blank" rel="noopener">Privacy Policy</a><span>|</span>
+    <a class="ft-link" href="https://www.mahsing.com.my/terms-of-use/" target="_blank" rel="noopener">Terms of Use</a>
   </div>
   <div class="ft-legal">
     <p>The information contained in this material is subject to change and cannot form part of an offer or contract. All renderings are artist's impressions only. All measurements are approximate. While every reasonable care has been taken in preparing this material, the developer cannot be held responsible for any inaccuracy. All the above items are subject to variations, modifications and substitutions as may be required by the Authorities or recommended by the Architect or Engineer.</p>
-    <p>Vienna View Development Sdn. Bhd. (728449-H) (A wholly-owned subsidiary of Mah Sing Group Berhad) 1-3A-30, Puncak Southbay, Cangkat Batu Maung 1, 11960 Bayan Lepas, Penang, Malaysia &middot; Tel.: 604-628 8188 &middot; Fax: 604-628 8189 &middot; M Amaya @ Southbay City &middot; Developer License No.: 12029/11-2027/1276(A) &middot; Validity Period: 11/11/2022 - 10/11/2027 &middot; Advertising &amp; Sales Permit No.: 12029-4/05-2029/0365(N)-(S) &middot; Validity Period: 19/05/2026 - 22/12/2030 &middot; Approving Authority: Majlis Bandaraya Pulau Pinang &middot; Building Plan Approval No.: MBPP.OSC-PB1725/2025 &middot; Type of Property: Serviced Apartment &middot; Total Units: 833 &middot; Total Car park: 1150 &middot; Number of Car Park: Type A - 1 unit, Type B - 2 unit, Type C - 2 or 3 units, Type D and Type E - 3 units &middot; Land Encumbrances: Hong Leong Investment Bank Berhad &middot; Expected Date of Completion: Dec 2030 &middot; Land Tenure: Freehold &middot; Selling Price: RM 657,250 (min) - RM 1,139,750 (max.)</p>
+    <p id="apdlLegal">Vienna View Development Sdn. Bhd. (728449-H) (A wholly-owned subsidiary of Mah Sing Group Berhad) 1-3A-30, Puncak Southbay, Cangkat Batu Maung 1, 11960 Bayan Lepas, Penang, Malaysia &middot; Tel.: 604-628 8188 &middot; Fax: 604-628 8189 &middot; M Amaya @ Southbay City &middot; Developer License No.: 12029/11-2027/1276(A) &middot; Validity Period: 11/11/2022 - 10/11/2027 &middot; Advertising &amp; Sales Permit No.: 12029-4/05-2029/0365(N)-(S) &middot; Validity Period: 19/05/2026 - 22/12/2030 &middot; Approving Authority: Majlis Bandaraya Pulau Pinang &middot; Building Plan Approval No.: MBPP.OSC-PB1725/2025 &middot; Type of Property: Serviced Apartment &middot; Total Units: 833 &middot; Total Car park: 1150 &middot; Number of Car Park: Type A - 1 unit, Type B - 2 unit, Type C - 2 or 3 units, Type D and Type E - 3 units &middot; Land Encumbrances: Hong Leong Investment Bank Berhad &middot; Expected Date of Completion: Dec 2030 &middot; Land Tenure: Freehold &middot; Selling Price: RM 657,250 (min) - RM 1,139,750 (max.)</p>
     <p>THIS ADVERTISEMENT HAS BEEN APPROVED BY JABATAN PERUMAHAN NEGARA. DEVELOPMENT INFORMATION CAN BE VERIFIED THROUGH TEDUH.KPKT.GOV.MY</p>
-    <p>Copyright &copy; 2026 M Amaya &middot; <a href="#">Privacy &amp; Personal Data Protection Policy</a></p>
+    <p>Copyright &copy; 2026 M Amaya &middot; <a href="https://www.mahsing.com.my/web/storage/2023/10/Privacy-PDP-Policy_RevOct2023-1.pdf" target="_blank" rel="noopener">Privacy &amp; Personal Data Protection Policy</a></p>
   </div>
 </footer>
 
@@ -3251,6 +3348,32 @@ if('IntersectionObserver' in window&&formSec){new IntersectionObserver(function(
    carried M Grand Minori prices and Matterport tours. The live layouts
    controller lives further down with var UNITS. */
 
+
+/* R2: hero carousel — Facade / Aerial / Infinity Pool / Zen Elevated Garden */
+(function(){
+  var hm=document.getElementById('heroMedia');if(!hm)return;
+  var arts=[hm.querySelector('.hs-1'),hm.querySelector('.hs-2'),hm.querySelector('.hs-3'),hm.querySelector('.hs-4')];
+  var dots=Array.prototype.slice.call(hm.querySelectorAll('.h-dot'));
+  var caps={1:'The Facade',2:'Aerial View',3:'Infinity Pool',4:'Zen Elevated Garden'};
+  var cap=document.getElementById('hCap');
+  var cur=1,timer=null,reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function go(n){
+    cur=((n-1)%4+4)%4+1;
+    arts.forEach(function(a,i){a.classList.toggle('on',i===cur-1);});
+    dots.forEach(function(d){d.classList.toggle('on',+d.getAttribute('data-hs')===cur);});
+    hm.setAttribute('data-slide',String(cur));
+    if(cap)cap.textContent=caps[cur];
+  }
+  function start(){if(reduce||timer)return;timer=setInterval(function(){go(cur+1);},6000);}
+  function stop(){if(timer){clearInterval(timer);timer=null;}}
+  dots.forEach(function(d){d.addEventListener('click',function(){go(+d.getAttribute('data-hs'));stop();start();});});
+  hm.addEventListener('mouseenter',stop);
+  hm.addEventListener('mouseleave',start);
+  document.addEventListener('visibilitychange',function(){if(document.hidden)stop();else start();});
+  var q=new URLSearchParams(location.search);
+  if(q.get('slide'))go(+q.get('slide'));
+  start();
+})();
 
 /* CGI Gallery */
 (function(){
@@ -3488,10 +3611,8 @@ function clearFac(){
   setFacLayer(null);
   setFacDetail(null);
 }
-document.addEventListener('click',function(e){
-  if(e.target.closest('.fac-btn')||e.target.closest('.fac-map-wrap')||e.target.closest('.fac-detail'))return;
-  if(facPinned.cat)clearFac();
-});
+/* R2: outside-click clearFac removed — with the photo layers gone, a category
+   stays pinned so the detail list is never empty. */
 /* Tabs */
 function showAm(b,id){document.querySelectorAll('.am-tab').forEach(function(t){t.classList.remove('on')});b.classList.add('on');['transport','schools','malls','health','others'].forEach(function(t){document.getElementById(t).style.display=t===id?'block':'none'})}
 /* FAQ */
@@ -4139,7 +4260,10 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
 .gal-prev{left:8px}
 .gal-next{right:8px}
 .mobile-drawer-label{color:#6E5228 !important}
-.sec-mid .sdesc,.sec-mid .sec-sub{color:#C9C2A6}
+/* R2 QA: .sec-mid on THIS page is the beige facilities band, not a dark band —
+   #C9C2A6 was invisible on it (Justin item 5). */
+.sec-mid .sdesc,.sec-mid .sec-sub{color:#55533E}
+.sec-mid h2.stl{color:var(--olive)}
 </style>
 
 <script>
@@ -4167,7 +4291,7 @@ window.mgmTrackLead = function (payload) {
 </script>
 
 <div class="nx">
-<div class="lb" id="lb"><button class="lb-x" id="lbX" aria-label="Close">&#10005;</button><img id="lbImg" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div>
+<!-- R2: flat #lb lightbox removed — everything opens in the fp-lb zoom lightbox -->
 </div>
 <script>
 (function(){
@@ -4228,43 +4352,77 @@ window.mgmTrackLead = function (payload) {
       t.setAttribute('aria-selected',String(t.getAttribute('data-type')===cur));});
     calc();
   }
+  /* R2: price is a picked point inside the permit band (no per-type pricing
+     is published, so the options are band points, not types). */
+  var PRICES=[
+    {v:657250, t:'Permit minimum'},
+    {v:750000, t:'Band point'},
+    {v:850000, t:'Band point'},
+    {v:950000, t:'Band point'},
+    {v:1050000,t:'Band point'},
+    {v:1139750,t:'Permit maximum'}
+  ];
+  var curPrice=PRICES[0];
   function calc(){
-    var p=$('cPrice2'); if(!p) return;
-    var price=+p.value, pct=+$('cLoan').value, yrs=+$('cTen').value;
-    var loan=price*pct/100, m=monthly(price,pct,yrs), total=m*yrs*12-loan;
-    $('cPriceOut').textContent='RM '+fmt(price);
+    var pct=+$('cLoan').value, yrs=+$('cTen').value;
+    var price=curPrice.v;
+    var loan=price*pct/100, m=monthly(price,pct,yrs);
+    $('cPriceVal').textContent='RM '+fmt(price)+'*';
+    $('cPriceTag').textContent=curPrice.t;
     $('cLoanOut').innerHTML='RM '+fmt(loan)+' &middot; '+pct+'%';
     $('cTenOut').textContent=yrs+' years';
     $('cMy').textContent='RM '+fmt(m);
-    $('cSg').textContent='RM '+fmt(total);
   }
   window.setType=function(t){ if(UNITS[t]){cur=t;render();} };
   Array.prototype.forEach.call(document.querySelectorAll('#tabs .tab'),function(tab){
     tab.addEventListener('click',function(){window.setType(tab.getAttribute('data-type'));});});
   ['cLoan','cTen'].forEach(function(id){$(id).addEventListener('input',calc);});
 
-  /* price picker cycles the type, keeping the calculator and the card in step */
-  $('cPrice2').addEventListener('input',calc);
+  /* the picker menu */
+  (function(){
+    var pick=$('cpPick'), menu=$('cpMenu');
+    if(!pick||!menu)return;
+    menu.innerHTML=PRICES.map(function(p,i){
+      return '<button type="button" role="option" class="cp-opt" data-i="'+i+'" aria-selected="'+(i===0)+'">'+
+        '<b class="cp-opt-p num">RM '+fmt(p.v)+'*</b>'+
+        '<span class="cp-opt-d">'+p.t+'</span></button>';
+    }).join('');
+    function close(){menu.hidden=true;pick.setAttribute('aria-expanded','false');}
+    pick.addEventListener('click',function(e){
+      e.stopPropagation();
+      var open=menu.hidden; menu.hidden=!open;
+      pick.setAttribute('aria-expanded',String(open));
+    });
+    menu.addEventListener('click',function(e){
+      var o=e.target.closest('.cp-opt'); if(!o)return;
+      curPrice=PRICES[+o.getAttribute('data-i')];
+      Array.prototype.forEach.call(menu.querySelectorAll('.cp-opt'),function(x){
+        x.setAttribute('aria-selected',String(x===o));});
+      calc(); close();
+    });
+    document.addEventListener('click',function(e){if(!menu.hidden&&!e.target.closest('.cprice'))close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  })();
 
-  /* lightbox */
+  /* R2: the floor plan opens in the ZOOM lightbox (fp-lb), not the flat one */
   $('planWrap').addEventListener('click',function(){
-    $('lbImg').src=this.getAttribute('data-full')||$('planImg').src;
-    $('lbImg').alt=$('planImg').alt; $('lb').classList.add('on'); document.body.style.overflow='hidden';});
-  function closeLb(){$('lb').classList.remove('on');document.body.style.overflow='';}
-  $('lbX').addEventListener('click',closeLb);
-  $('lb').addEventListener('click',function(e){if(e.target===this)closeLb();});
-
-  
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'&&$('lb').classList.contains('on'))closeLb();
-  });
-  /* nearby places */
+    fpOpen(this.getAttribute('data-full')||$('planImg').src,$('planImg').alt);});
+  /* nearby places. Transport/work rows carry the LIVE site's published
+     distances; malls/schools/health/landmarks come from the client's design
+     kit area board (Figma node 31:1028). Where the two disagree (Queensbay,
+     airport) the live figure is kept — flagged in rebuild-direction.md. */
   var PLACES={
     transport:[['Penang Second Bridge','900 m'],['Tun Dr. Lim Chong Eu Expressway','Direct access'],
       ['Upcoming LRT Station S02, Permatang Damar Laut','4.6 km'],['Bayan Lepas International Airport','7 km']],
     work:[['Upcoming Silicon Island','4 km'],['Bayan Lepas Free Industrial Zone','Adjacent'],
       ['Southbay Plaza retail hub','Adjacent']],
-    shopping:[['Queensbay Mall','7 km'],['Southbay Plaza retail hub','Adjacent']]
+    malls:[['Southbay Plaza retail hub','Adjacent'],['Giant Bayan Baru','6.5 km'],['Sunshine Square','7.5 km'],
+      ['Queensbay Mall','7 km'],["Lotus's E-Gate",'10.3 km'],['Gurney Plaza','19.7 km']],
+    schools:[['SJKC Wen Khai','2.1 km'],['SJKC Keong Hoe','7.5 km'],['Straits International School','7.8 km'],
+      ['INTI International College','9.2 km'],['Universiti Sains Malaysia','10.1 km'],['Fairview International School','11.6 km']],
+    health:[['Pantai Hospital','6.3 km'],['Lam Wah Ee Hospital','14.3 km']],
+    landmarks:[['Penang War Museum','1.5 km'],['SPICE Arena','8 km'],['BJ Golf Club','9.1 km'],
+      ['Penang First Bridge','10 km'],['Karpal Singh Drive','14 km'],['Komtar / George Town','17 km']]
   };
   function drawPlaces(cat){
     $('locList').innerHTML=PLACES[cat].map(function(p){
@@ -4291,12 +4449,16 @@ window.mgmTrackLead = function (payload) {
   setNavH(); window.addEventListener('resize',setNavH);
   window.addEventListener('scroll',function(){window.requestAnimationFrame(setNavH);},{passive:true});
 
-  /* item 2: the facilities plan and every gallery frame open in the lightbox */
-  function openLb(src,alt){
-    $('lbImg').src=src; $('lbImg').alt=alt||''; $('lb').classList.add('on'); document.body.style.overflow='hidden';
-  }
-  var fp=$('facPlan');
-  if(fp)fp.addEventListener('click',function(){openLb(fp.getAttribute('data-full'),'Facilities plan');});
+  /* R2 (Justin item 3): every clicked visual opens in the ZOOM lightbox.
+     openLb delegates to fpOpen so gallery, unit shots and plans all get
+     wheel / pinch / drag / button zoom. The flat #lb is gone. */
+  function openLb(src,alt){ fpOpen(src,alt); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fp-zoom]'),function(el){
+    el.addEventListener('click',function(){
+      var i=el.querySelector('img');
+      fpOpen(el.getAttribute('data-full')||i.src,(i&&i.alt)||'Plan');
+    });
+  });
   Array.prototype.forEach.call(document.querySelectorAll('#gal figure'),function(f){
     f.addEventListener('click',function(){var i=f.querySelector('img');openLb(f.getAttribute('data-full')||i.src,i.alt);});
   });
