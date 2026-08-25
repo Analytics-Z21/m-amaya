@@ -4436,6 +4436,10 @@ body::before{content:none}
 .ann{background:#5c4025;color:#e6cfa4;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
 .nav{background:rgba(92,64,37,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(230,207,164,.22)}
+/* R6 (Justin item 1): the -80/-88px pull-under existed for the old transparent
+   nav; the bronze bar is opaque and shorter than 88px, so the hero was hoisted
+   11px OVER the ticker — the "gap" strip. No overlap needed any more. */
+.nav{margin-bottom:0 !important}
 .nav.is-scrolled{background:rgba(92,64,37,.95);box-shadow:0 2px 16px rgba(40,25,12,.25)}
 .nav-rail a{color:#f1e5cd;text-shadow:none}
 .nav-rail a:hover{color:#fff}
@@ -4471,8 +4475,15 @@ body::before{content:none}
 @media(max-width:759px){.scrim-shade{background:linear-gradient(180deg,rgba(58,38,20,.92) 0%,rgba(79,54,32,.78) 55%,rgba(107,78,45,.4) 100%)}}
 .scrim-fade{position:absolute;left:0;right:0;bottom:0;height:180px;z-index:-1;
   background:linear-gradient(to bottom,rgba(187,169,138,0),var(--sand))}
-.scrim-body{position:relative;padding:96px 0 120px}
-@media(max-width:759px){.scrim-body{padding:64px 0 96px}}
+/* R6 (Justin item 2): the section was rendering ~330px tall, so cover-cropping
+   left only sky. The body now holds the proposal's proportions (~40vw slice,
+   576px at the design's 1440 preview) and the image is anchored low so the
+   bridge and the mountain stay in frame, fading into the sand at the foot. */
+.scrim-body{position:relative;padding:96px 0 120px;min-height:40vw;
+  display:flex;flex-direction:column;justify-content:center}
+.scrim-img{object-position:center 68%}
+@media(max-width:759px){.scrim-body{padding:64px 0 96px;min-height:0}
+  .scrim-img{object-position:62% 70%}}
 .sec-scrim .sc-eyebrow,.nx .sec-scrim .eyebrow{color:#e6cfa4}
 .sec-scrim .sc-h2{font:400 clamp(30px,3.3vw,46px)/1.1 var(--fd);color:#faf3e9;margin:18px 0 0;max-width:620px}
 .sec-scrim .sc-h2 .em{color:#e6cfa4}
