@@ -2849,7 +2849,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div class="form-card">
-        <form id="quickForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&amp;orgId=00D0o0000015t7i" method="POST" onsubmit="window._mgmDrawerSource='quick_form';return handleMgmDrawerFormSubmit(this)" novalidate>
+        <form id="quickForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&amp;orgId=00D0o0000015t7i" method="POST" onsubmit="return handleMgmQuickFormSubmit(this)" novalidate>
           <input type="hidden" name="oid" value="00D0o0000015t7i">
           <input type="hidden" name="retURL" value="https://ver2.m-amaya.com.my/thank-you">
           <input type="hidden" name="lead_source" value="Web">
@@ -3299,7 +3299,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="form-card">
         <!-- Attribution select dropped per the 2026-08-20 lead-form standard
              (three fields only) — flagged to Mah Sing before launch. -->
-        <form id="visitForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&amp;orgId=00D0o0000015t7i" method="POST" onsubmit="window._mgmDrawerSource='visit_form';return handleMgmDrawerFormSubmit(this)" novalidate>
+        <form id="visitForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&amp;orgId=00D0o0000015t7i" method="POST" onsubmit="return handleMgmFormSubmit(this)" novalidate>
           <input type="hidden" name="oid" value="00D0o0000015t7i">
           <input type="hidden" name="retURL" value="https://ver2.m-amaya.com.my/thank-you">
           <input type="hidden" name="lead_source" value="Web">
@@ -3938,7 +3938,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     window.clearLeadFormError(form);
 
     // Parallel capture to n8n (Phase 1 safety net) — returns UUID for dataLayer
-    var submissionId = window.captureFormDiagnostic(form, 'mgmRegisterForm');
+    var submissionId = window.captureFormDiagnostic(form, 'mainRegisterForm');
 
     window.mgmTrackLead({
       event: 'generate_lead',
@@ -3965,7 +3965,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     window.clearLeadFormError(form);
 
     // Parallel capture to n8n (Phase 1 safety net) — returns UUID for dataLayer
-    var submissionId = window.captureFormDiagnostic(form, 'mgmQuickForm');
+    var submissionId = window.captureFormDiagnostic(form, 'quickRegisterForm');
 
     window.mgmTrackLead({
       event: 'generate_lead',
@@ -4002,7 +4002,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     var trigger = window._mgmDrawerSource || 'unknown';
 
     // Parallel capture to n8n (Phase 1 safety net) — returns UUID for dataLayer
-    var submissionId = window.captureFormDiagnostic(form, 'mgmLeadDrawer');
+    var submissionId = window.captureFormDiagnostic(form, 'leadFormDrawer');
 
     window.mgmTrackLead({
       event: 'generate_lead',
