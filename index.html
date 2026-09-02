@@ -3219,15 +3219,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <!-- R3 (Justin items 4 + 8): the map fits its frame (contain, no crop) and
-         zooms on the spot; the chip still opens it full screen. -->
+         zooms on the spot; the chip still opens it full screen.
+         R10 2026-09-02: artwork replaced with the client's MAP_V3 (bronze CI,
+         Mutiara LRT line + stations, Silicon Island drawn as landmass; the
+         amenity POIs it dropped are still carried by the loc-panel list).
+         New filename rather than an in-place overwrite so the CDN and browser
+         caches cannot serve the old map. -->
     <div class="loc-map-bg" data-zoom-surface>
-      <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/zenni-map.png" aria-label="Open the location map full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
+      <button type="button" class="fac-zoom" data-fp-zoom data-full="assets/loc-map-v3.webp" aria-label="Open the location map full screen"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>Full screen</button>
       <div class="fz-ctl">
         <button class="fz-btn fz-in" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
         <button class="fz-btn fz-out" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
         <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
       </div>
-      <img src="assets/zenni-map.png" alt="M Amaya location map, Southbay City, Batu Maung, Penang" class="fac-base" width="1243" height="1536">
+      <img src="assets/loc-map-v3.webp" alt="M Amaya location map: Southbay City, Batu Maung, with the Penang First and Second Bridges, Penang International Airport, the upcoming Mutiara LRT line and Penang Silicon Island" class="fac-base" width="1563" height="2117">
     </div>
   </div>
 </section>
