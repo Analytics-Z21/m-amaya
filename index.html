@@ -4,25 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<!-- Analytics: TWO tags on this page, deliberately.
-     1. The client's live GTM container GTM-5SHKCW8H, which carries their Google
-        Ads conversion tags and their own GA4 properties. Left untouched.
-     2. M Amaya's OWN GA4 property, G-6XTMZSVPK3 (supplied 2026-09-03), as bare
-        gtag.js below.
-     Both are needed. GTM alone was the problem: its snippet defines dataLayer but
-     never defines window.gtag, so mgmTrackLead's gtag() branch was dead and
-     generate_lead only ever reached dataLayer, where it needed a container tag to
-     forward it. That is the same failure that lost generate_lead on M Grand
-     Minori. Bare gtag.js defines window.gtag and configures a measurement id that
-     is disjoint from the container's, so the lead events are self-contained and
-     do not depend on anyone editing the container. -->
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5SHKCW8H');</script>
-<!-- End Google Tag Manager -->
+<!-- Analytics: ONE collection point on this page, G-6XTMZSVPK3, the
+     "ver2 M Amaya" data stream (property 551818181, stream id 15687212040).
+
+     The client's container GTM-5SHKCW8H was REMOVED on 2026-09-03. It was not
+     harmless: it fired page_view into six further destinations from every ver2
+     page, and one of those was G-NWYLHB9D31, M Amaya's ORIGINAL data stream, in
+     the SAME property. GA4 reports roll up across streams, so the identical
+     visit was counted twice. Measured on 2026-09-03 for hostname
+     ver2.m-amaya.com.my: stream "M Amaya" 8 page_view and 7 session_start
+     against stream "ver2 M Amaya" 3 and 3. Sessions were duplicated, so every
+     conversion rate read on this property had an inflated denominator.
+     The other five destinations were G-Z02N5KPGBB, G-DLHPG5V505,
+     AW-18195924554, AW-11479177280 and one tag whose measurement-id variable
+     did not resolve, sending hits nowhere. Justin confirmed nobody is entitled
+     to ver2 traffic in those, and the ver2 arm has taken zero paid traffic in
+     30 days, so the two Ads accounts lose nothing measurable.
+
+     Do NOT re-add a container here. The lead events are self-contained: this
+     bare gtag.js defines window.gtag, so mgmTrackLead and lead_confirmed reach
+     GA4 without any container tag forwarding them. Re-adding one reintroduces
+     the double count. -->
 <!-- Google tag (gtag.js) — M Amaya's own GA4 property -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XTMZSVPK3"></script>
 <script>
@@ -2577,10 +2579,6 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SHKCW8H"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <!-- ANNOUNCE (auto marquee) -->
 <div class="ann">

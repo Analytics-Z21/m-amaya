@@ -2,20 +2,14 @@
 <html lang="en">
 <head>
 <!-- M AMAYA ver2 - THANK YOU (2026-08-25, Figma light-ray direction). Salesforce
-     Web-to-Lead retURL target. The conversion signal here is lead_confirmed
-     (fired at the foot of this page into G-6XTMZSVPK3), backed by the GTM
-     page_view. Palette per the live-site measurement (2026-08-20 spec): ivory ground,
+     Web-to-Lead retURL target. The conversion signal here is lead_confirmed,
+     fired at the foot of this page into G-6XTMZSVPK3. The GTM container was
+     removed on 2026-09-03, see the note in index.html: it was duplicating every
+     ver2 pageview into M Amaya's original stream in the same property. This
+     page now has ONE collection point. Palette per the live-site measurement (2026-08-20 spec): ivory ground,
      olive ink, bronze accents, cream CTA text on olive fill. -->
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5SHKCW8H');</script>
-<!-- End Google Tag Manager -->
 <!-- Google tag (gtag.js) — M Amaya's own GA4 property, same id as index.html.
-     Required here too: lead_confirmed below calls gtag() directly, and GTM's
-     snippet does not define window.gtag. -->
+     This is now the only tag on the page, so it also owns the page_view. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XTMZSVPK3"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -66,10 +60,6 @@ footer{padding:20px 24px calc(20px + env(safe-area-inset-bottom));border-top:1px
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SHKCW8H"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <div class="top"><a href="/"><img src="assets/mamaya-logo1.png" alt="M Amaya"></a></div>
 
@@ -100,7 +90,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      async, so an inline call at parse time races its initialisation and was
      observed firing only intermittently on M Aria. The poll waits for a real
      gtag, fires exactly once, and gives up after 6s. The dataLayer push is
-     kept unconditionally so any GTM tag can also pick the event up. -->
+     kept unconditionally, harmless now that no container reads it, and it
+     costs nothing if one is ever legitimately added. -->
 <script>
 (function(){
   var sent=false, tries=0;
