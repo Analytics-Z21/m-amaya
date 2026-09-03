@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <!-- M AMAYA ver2 - THANK YOU (2026-08-25, Figma light-ray direction). Salesforce
-     Web-to-Lead retURL target. GTM page_view here is the client-side conversion
-     signal. Palette per the live-site measurement (2026-08-20 spec): ivory ground,
+     Web-to-Lead retURL target. The conversion signal here is lead_confirmed
+     (fired at the foot of this page into G-6XTMZSVPK3), backed by the GTM
+     page_view. Palette per the live-site measurement (2026-08-20 spec): ivory ground,
      olive ink, bronze accents, cream CTA text on olive fill. -->
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -12,6 +13,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5SHKCW8H');</script>
 <!-- End Google Tag Manager -->
+<!-- Google tag (gtag.js) — M Amaya's own GA4 property, same id as index.html.
+     Required here too: lead_confirmed below calls gtag() directly, and GTM's
+     snippet does not define window.gtag. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XTMZSVPK3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6XTMZSVPK3');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thank You — M Amaya Penang</title>
@@ -78,5 +89,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </main>
 
 <footer>M Amaya &middot; Southbay City, Batu Maung, Penang &middot; A development by Vienna View Development Sdn. Bhd., a subsidiary of Mah Sing Group Berhad</footer>
+<!-- lead_confirmed: the navigation-proof counterpart to generate_lead.
+     generate_lead fires on submit, before Salesforce has confirmed anything.
+     This page is only reachable via the Salesforce retURL redirect, which
+     Salesforce performs ONLY after it has accepted the lead, so the gap
+     between the two events is the submit-to-Salesforce drop-off, and this one
+     is directly comparable with the original site's thank-you-page event.
+
+     Fires via a readiness poll rather than a bare inline call: gtag.js is
+     async, so an inline call at parse time races its initialisation and was
+     observed firing only intermittently on M Aria. The poll waits for a real
+     gtag, fires exactly once, and gives up after 6s. The dataLayer push is
+     kept unconditionally so any GTM tag can also pick the event up. -->
+<script>
+(function(){
+  var sent=false, tries=0;
+  var params={ lead_type:'form_submission', page_location:location.href };
+  try{
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({ event:'lead_confirmed', lead_type:'form_submission' });
+  }catch(e){}
+  function fire(){
+    if(sent) return true;
+    try{
+      if(typeof window.gtag==='function'){
+        window.gtag('event','lead_confirmed',params);
+        sent=true; return true;
+      }
+    }catch(e){ sent=true; return true; }
+    return false;
+  }
+  function poll(){
+    if(fire()) return;
+    if(++tries>30) return;              /* ~6s ceiling */
+    setTimeout(poll,200);
+  }
+  if(document.readyState==='complete') poll();
+  else window.addEventListener('load',poll);
+  setTimeout(poll,400);                 /* also try early, in case load is slow */
+})();
+</script>
 </body>
 </html>

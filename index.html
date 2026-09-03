@@ -4,8 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<!-- Analytics: M Amaya's live GTM container (single container, dataLayer only,
-     per the ver2 convention set on M Legasi). -->
+<!-- Analytics: TWO tags on this page, deliberately.
+     1. The client's live GTM container GTM-5SHKCW8H, which carries their Google
+        Ads conversion tags and their own GA4 properties. Left untouched.
+     2. M Amaya's OWN GA4 property, G-6XTMZSVPK3 (supplied 2026-09-03), as bare
+        gtag.js below.
+     Both are needed. GTM alone was the problem: its snippet defines dataLayer but
+     never defines window.gtag, so mgmTrackLead's gtag() branch was dead and
+     generate_lead only ever reached dataLayer, where it needed a container tag to
+     forward it. That is the same failure that lost generate_lead on M Grand
+     Minori. Bare gtag.js defines window.gtag and configures a measurement id that
+     is disjoint from the container's, so the lead events are self-contained and
+     do not depend on anyone editing the container. -->
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -13,6 +23,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5SHKCW8H');</script>
 <!-- End Google Tag Manager -->
+<!-- Google tag (gtag.js) — M Amaya's own GA4 property -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XTMZSVPK3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6XTMZSVPK3');
+</script>
 <!-- Primary SEO -->
 <title>M Amaya | Freehold Serviced Apartments at Southbay City, Batu Maung, Penang</title>
 <meta name="description" content="Freehold affordable homes at Penang's southern gateway, near Silicon Island, the Penang Second Bridge and Bayan Lepas FIZ, with shuttle service and multi-tier security. 833 units, 721 to 1,432 sq. ft.">
@@ -4707,8 +4725,13 @@ body::before{content:none}
 <script>
 /* ===== ROUND 1: lead tracking =====================================================
    SITE-1: the dataLayer.push({event:'generate_lead'}) calls below were never reaching
-   GA4 because no GTM tag forwards them. mgmTrackLead now ALSO calls gtag() directly,
-   which lands in G-D2MFJ76RZX regardless of container config.
+   GA4 because no GTM tag forwards them. mgmTrackLead now ALSO calls gtag() directly.
+   2026-09-03: that gtag() branch was dormant until today — GTM's snippet defines
+   dataLayer but not window.gtag, so the typeof check below always failed. With
+   M Amaya's own property G-6XTMZSVPK3 installed as bare gtag.js in the head, the
+   branch is live and generate_lead lands in G-6XTMZSVPK3 regardless of container
+   config. (The id previously named here, G-D2MFJ76RZX, is M GRAND MINORI's and was
+   never correct for this page; it was inert only because gtag was undefined.)
    SITE-4: 'generate_lead' is the single canonical lead event. The original site must
    be changed to fire the same name before the head-to-head URL test, or the two arms
    cannot be compared.
