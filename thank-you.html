@@ -129,5 +129,32 @@ footer{padding:20px 24px calc(20px + env(safe-area-inset-bottom));border-top:1px
   setTimeout(poll,400);                 /* also try early, in case load is slow */
 })();
 </script>
+<!-- contact_click (2026-10-06 GA4 click event spec, same name and params as index.html):
+     tel, WhatsApp, mailto, Google Maps and Waze links on this page. Capture phase,
+     trusted clicks only, read-only, try/catch: it cannot block the link. -->
+<script>
+(function(){
+  function contactType(h){
+    if(/^tel:/i.test(h)) return 'phone';
+    if(/^mailto:/i.test(h)) return 'email';
+    if(/\/\/(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com)\//i.test(h)) return 'whatsapp';
+    if(/\/\/([a-z]+\.)?waze\.com\//i.test(h)) return 'waze';
+    if(/\/\/(www\.)?google\.[a-z.]+\/maps|\/\/maps\.google\.|\/\/maps\.app\.goo\.gl\/|\/\/goo\.gl\/maps/i.test(h)) return 'map';
+    return null;
+  }
+  document.addEventListener('click',function(e){
+    try{
+      if(!e.isTrusted) return;
+      var t=e.target&&e.target.nodeType===1?e.target:(e.target&&e.target.parentElement);
+      var a=t&&t.closest&&t.closest('a[href]'); if(!a) return;
+      var type=contactType(a.getAttribute('href')||''); if(!type) return;
+      var params={ contact_type:type, section:'thank_you' };
+      window.dataLayer=window.dataLayer||[];
+      window.dataLayer.push({ event:'contact_click', contact_type:type, section:'thank_you' });
+      if(typeof window.gtag==='function') window.gtag('event','contact_click',params);
+    }catch(err){}
+  },true);
+})();
+</script>
 </body>
 </html>
