@@ -32,12 +32,17 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Type follows ver2 M Aurora (2026-10-09): Boska Medium on h1/h2, Boska Bold on other serif, Montserrat for the rest */
+@font-face{font-family:"Boska";src:url("assets/boska-700.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Boska Medium";src:url("assets/boska-500.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Boska";src:url("assets/boska-700i.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Boska Medium";src:url("assets/boska-500i.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:swap}
 :root{--ivory:#F5F0DF;--sand:#B6A782;--olive:#584D04;--olive2:#293218;--bronze:#B28957;
   --cream:#F0E4D1;--ink:#3A3A2A;--mull:rgba(89,77,10,.18);
-  --fd:'Cormorant Garamond',Georgia,serif;--fb:'Source Sans 3','Segoe UI',sans-serif;
-  --fm:'Source Code Pro','Courier New',monospace}
+  --fd:"Boska",Georgia,serif;--fb:'Montserrat','Segoe UI',sans-serif;
+  --fm:'Montserrat','Segoe UI',sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px}
 body{font-family:var(--fb);background:var(--ivory);color:var(--ink);min-height:100svh;
@@ -66,6 +71,8 @@ h1 em{font-style:normal;color:#7A5A2D}
 .hours{font:400 12px/1.7 var(--fb);color:#55553F}
 footer{padding:20px 24px calc(20px + env(safe-area-inset-bottom));border-top:1px solid var(--mull);
   text-align:center;font:400 12px/1.7 var(--fb);color:#55553F;background:var(--ivory)}
+h1,h2{--fd:"Boska Medium","Boska",Georgia,serif}
+*{font-variant-numeric:lining-nums!important}
 </style>
 </head>
 <body>
