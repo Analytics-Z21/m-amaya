@@ -1191,6 +1191,11 @@ img.lz-in{animation:lzIn .35s ease forwards}
 .f-input{width:100%;background:var(--white-bg);border:1.5px solid rgba(178,137,87,.4);border-radius:10px;
   color:var(--td-fg);font:500 13.5px var(--fb);padding:13px 14px;-webkit-appearance:none}
 .f-input::placeholder{color:#6B6752}
+/* 10 Oct 2026: each error sits under the field that failed (the old single line above the button hid under the
+   phone keyboard and named no field), and inputs are 16px on touch screens so iOS does not zoom the page. */
+.f-err{display:table;margin:6px 0 0;padding:3px 8px;border-radius:6px;background:#fdecea;color:#8c1d18;font:600 14px/1.4 var(--fb);text-align:left}
+.f-input.f-invalid{border-color:#b3261e!important;box-shadow:0 0 0 1px #b3261e!important}
+@media (pointer:coarse){.f-input,select.f-input{font-size:16px!important}}
 .f-input:focus{outline:2px solid var(--copper2-br);outline-offset:1px}
 .field{margin-bottom:11px}
 .f-consent{font:400 11px/1.6 var(--fb);color:var(--tm-fg);margin:10px 0 0;text-align:center}
@@ -3891,7 +3896,8 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
        - Phone: 9-13 digits after stripping non-digits.
                 If "60" country code present, next digit must be "1"
                 (Malaysian mobile prefix). Rejects 14+ digit bot phones.
-       - Phone field auto-formats to 012-345 6789 / +60 12-345 6789
+       - Phone field is formatted on blur and on submit (+6012-3456789), never while
+         typing: rewriting it per keystroke broke composing Android keyboards (10 Oct 2026)
      ============================================================ -->
 <script>
 (function () {
@@ -3933,6 +3939,74 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
       return 'Please enter a valid Malaysian phone number (e.g. 012-345 6789).';
     }
     return null;
+  };
+
+  // ---- Per-field check (10 Oct 2026) ----
+  // One message under each field that failed, the first one scrolled into view and focused,
+  // and a GA4 form_error event naming the field and reason (never the value), so a rejected
+  // submit is counted instead of guessed at from recordings. If anything in here throws, the
+  // old single-message check runs instead, so a bug can never let an invalid form through or
+  // block a valid one.
+  var FIELD_MSG = {
+    last_name: { empty: 'Please enter your name.' },
+    mobile: { empty: 'Please enter your phone number.', format: 'Please check your phone number, e.g. 012-345 6789.' },
+    email: { empty: 'Please enter your email.', format: 'Please check your email, e.g. name@gmail.com.' }
+  };
+  window.clearLeadFieldError = function (input) {
+    if (!input) return;
+    input.classList.remove('f-invalid');
+    input.removeAttribute('aria-invalid');
+    var e = input.parentNode && input.parentNode.querySelector('.f-err[data-for="' + input.name + '"]');
+    if (e) e.parentNode.removeChild(e);
+  };
+  window.checkLeadForm = function (form, formName, opts) {
+    try {
+      var phone = form.querySelector('input[data-my-phone]');
+      if (phone && typeof window.formatMyPhone === 'function') window.formatMyPhone(phone, { normalise: true });
+      var inputs = form.querySelectorAll('input[name="last_name"], input[name="mobile"], input[name="email"]');
+      var errs = [];
+      Array.prototype.forEach.call(inputs, function (input) {
+        window.clearLeadFieldError(input);
+        var v = (input.value || '').trim(), reason = null;
+        if (!v) reason = 'empty';
+        else if (input.name === 'email' && !window.isValidLeadEmail(v)) reason = 'format';
+        else if (input.name === 'mobile' && !window.isValidMyPhone(v)) reason = 'format';
+        if (reason) errs.push({ input: input, field: input.name, reason: reason });
+      });
+      window.clearLeadFormError(form);
+      if (!errs.length) return true;
+      errs.forEach(function (x) {
+        x.input.classList.add('f-invalid');
+        x.input.setAttribute('aria-invalid', 'true');
+        var e = document.createElement('p');
+        e.className = 'f-err';
+        e.setAttribute('data-for', x.field);
+        e.setAttribute('role', 'alert');
+        e.textContent = FIELD_MSG[x.field][x.reason];
+        x.input.insertAdjacentElement('afterend', e);
+      });
+      var first = errs[0].input;
+      try { first.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e1) { first.scrollIntoView(); }
+      try { first.focus({ preventScroll: true }); } catch (e2) { /* focus is a courtesy */ }
+      form._z21Attempts = (form._z21Attempts || 0) + 1;
+      if (typeof window.z21Track === 'function' && !(opts && opts.silent)) {
+        window.z21Track('form_error', {
+          form_name: formName,
+          error_field: errs[0].field,
+          error_reason: errs[0].reason,
+          error_fields: errs.map(function (x) { return x.field; }).join(','),
+          phone_digits: phone ? String(phone.value || '').replace(/\D/g, '').length : undefined,
+          attempt: form._z21Attempts
+        });
+      }
+      return false;
+    } catch (err) {
+      var g = function (n) { return ((form.querySelector('input[name="' + n + '"]') || {}).value || '').trim(); };
+      var msg = window.validateLeadFields(g('last_name'), g('email'), g('mobile'));
+      if (msg) { window.showLeadFormError(form, msg); return false; }
+      window.clearLeadFormError(form);
+      return true;
+    }
   };
 
   // ─────────────────────────────────────────────────────────────
@@ -4016,12 +4090,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     var mobile = (form.querySelector('input[name="mobile"]') || {}).value || '';
     name = name.trim(); email = email.trim(); mobile = mobile.trim();
 
-    var err = window.validateLeadFields(name, email, mobile);
-    if (err) {
-      window.showLeadFormError(form, err);
-      return false;
-    }
-    window.clearLeadFormError(form);
+    if (!window.checkLeadForm(form, 'M Amaya Registration')) return false;
 
     // Parallel capture to n8n (Phase 1 safety net) — returns UUID for dataLayer
     var submissionId = window.captureFormDiagnostic(form, 'mainRegisterForm');
@@ -4043,12 +4112,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     var mobile = (form.querySelector('input[name="mobile"]') || {}).value || '';
     name = name.trim(); email = email.trim(); mobile = mobile.trim();
 
-    var err = window.validateLeadFields(name, email, mobile);
-    if (err) {
-      window.showLeadFormError(form, err);
-      return false;
-    }
-    window.clearLeadFormError(form);
+    if (!window.checkLeadForm(form, 'M Amaya Quick Form')) return false;
 
     // Parallel capture to n8n (Phase 1 safety net) — returns UUID for dataLayer
     var submissionId = window.captureFormDiagnostic(form, 'quickRegisterForm');
@@ -4078,12 +4142,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
     var mobile = (form.querySelector('input[name="mobile"]') || {}).value || '';
     name = name.trim(); email = email.trim(); mobile = mobile.trim();
 
-    var err = window.validateLeadFields(name, email, mobile);
-    if (err) {
-      window.showLeadFormError(form, err);
-      return false;
-    }
-    window.clearLeadFormError(form);
+    if (!window.checkLeadForm(form, 'M Amaya Drawer Form')) return false;
 
     var trigger = window._mgmDrawerSource || 'unknown';
 
@@ -4278,8 +4337,10 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
   }
 
   // ---- Malaysian phone auto-formatter ----
-  // During typing → format as-is (012-345 6789 OR +60 X-XXX XXXX).
-  // On blur      → if user entered local 0XX… (no +60), auto-promote to
+  // While typing → nothing (10 Oct 2026). Rewriting the value on every input event broke
+  //                Android keyboards that compose a number as a word: 0123456789 arrived as
+  //                +60120-123456012 and was rejected (tools/_amaya_ime_phone_test.mjs).
+  // On blur and on submit → if user entered local 0XX… (no +60), auto-promote to
   //                "+60 1X-XXX XXXX" so the value going to Salesforce is
   //                always WhatsApp-routable.
   function formatMyPhone(input, options) {
@@ -4315,9 +4376,10 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
 
     input.value = prefix + formatted;
   }
+  window.formatMyPhone = formatMyPhone;
 
   document.querySelectorAll('input[data-my-phone]').forEach(function (input) {
-    input.addEventListener('input', function () { formatMyPhone(input, { normalise: false }); });
+    input.addEventListener('input', function () { window.clearLeadFieldError(input); });
     input.addEventListener('blur', function () {
       formatMyPhone(input, { normalise: true }); // auto +60 here
       if (input.value && !window.isValidMyPhone(input.value)) {
@@ -4326,6 +4388,10 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
         input.setCustomValidity('');
       }
     });
+  });
+
+  document.querySelectorAll('form input[name="last_name"], form input[name="email"]').forEach(function (input) {
+    input.addEventListener('input', function () { window.clearLeadFieldError(input); });
   });
 
   // ---- Email: structural validation + inline typo suggestion ----
@@ -5496,6 +5562,9 @@ window.z21Track = function (name, params) {
   if (!/\.pages\.dev$|^localhost$|^127\./.test(location.hostname)) return;
   document.addEventListener('submit', function (e) {
     var f = e.target; e.preventDefault(); e.stopImmediatePropagation();
+    // 10 Oct 2026: run the field check first, so a reviewer sees the errors a visitor would. Only a valid form
+    // gets the note below. Still nothing is sent: no Salesforce, no n8n, no generate_lead, no form_error event.
+    if (typeof window.checkLeadForm === 'function' && !window.checkLeadForm(f, 'preview', { silent: true })) return;
     var n = f.querySelector('.preview-note');
     if (!n) {
       n = document.createElement('p'); n.className = 'preview-note'; n.setAttribute('role', 'status');
