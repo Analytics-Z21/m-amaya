@@ -2897,11 +2897,19 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
 }
 
 /* ---------- quick form on night, the card white ---------------------------- */
-.nx #quickRegister{background:var(--night-bg);border-bottom:1px solid var(--night-br)}
+/* round 2 (16 Oct): the live build's textured sand returns behind the quick form: the live sand #bba98a with its .sbg grain
+   layer (same tile, size and soft-light blend, at the live grain-hi .61), darkened by a warm bronze veil running the same
+   105deg as the live bronze panel (#483826 to #715D43 as painted), so the champagne copy holds 4.5:1 across the width and
+   the white card lifts off it. Only this ground changes; the rest of the page keeps the night rhythm. */
+.nx #quickRegister{background:linear-gradient(105deg,rgba(50,34,18,.84) 0%,rgba(66,47,27,.78) 45%,rgba(84,64,40,.72) 100%),#bba98a;border-bottom:1px solid var(--night-br)}
+#quickRegister .sbg{display:block;position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('assets/grain-tile.png');background-size:256px;mix-blend-mode:soft-light;opacity:.61}
+#quickRegister .copy,.nx #quickRegister .copy,#quickRegister .qx-points div{color:var(--night-fg)}
+#quickRegister .eyebrow,.nx #quickRegister .eyebrow{color:var(--night-fg)}
+#quickRegister h2 .em,.nx #quickRegister .em{color:#E2D0BC}
 .qx,.visit{background:none;padding:0;isolation:auto;overflow:visible}
 .qx::before,.qx::after,.visit::before,.visit::after{content:none}
 #quickRegister .qx-points{display:grid;gap:12px;margin-top:22px;justify-items:start}
-#quickRegister .qx-points div{display:flex;align-items:center;gap:12px;font:600 13.5px/1.5 var(--fb);color:var(--night-mute);border:0;padding:0;margin:0}
+#quickRegister .qx-points div{display:flex;align-items:center;gap:12px;font:600 13.5px/1.5 var(--fb);color:var(--night-fg);border:0;padding:0;margin:0} /* round 2: full champagne on the sand (the .76 mute read under 4.5:1 there) */
 #quickRegister .qx-points div span{display:inline-flex;flex:none;width:26px;height:26px;border-radius:50%;border:1px solid rgba(240,228,209,.4);align-items:center;justify-content:center}
 #quickRegister .qx-points div span::before{content:"\2713";color:var(--night-accent);font-weight:700;font-size:12px;line-height:1}
 .nx #quickRegister .form-card{background:#fff;color:var(--paper-fg);border:0;border-radius:4px;padding:28px 24px;box-shadow:0 40px 90px -40px rgba(0,0,0,.6)}
@@ -2933,6 +2941,20 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
 .nx #layouts .price-val{color:var(--olive)}
 .nx #layouts .ushot{border-color:rgba(41,50,24,.12);background:var(--paper-bg)}
 .nx #layouts .ushot-note{color:var(--paper-mute);opacity:1}
+/* round 2 (16 Oct): two interior shots now (the key plan lives in the plan box) */
+.nx #layouts .unit-shots{grid-template-columns:repeat(2,1fr)}
+/* round 2 (16 Oct): Floor plan | Key plan toggle inside the plan box, on one bar with the enlarge hint; the box gains head
+   room so the plan clears the bar. Selected view takes ink, as the layout tabs do (never the ask colour). */
+.nx #layouts .unit-plan{padding:70px 20px 24px}
+.nx #layouts .plan-top{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;z-index:3;pointer-events:none}
+.nx #layouts .plan-top>*{pointer-events:auto}
+.nx #layouts .plan-top .unit-zoom{position:static;pointer-events:none}
+.nx #layouts .plan-views{display:inline-flex;border:1.5px solid rgba(41,50,24,.22);border-radius:2px;background:#fff;overflow:hidden}
+.nx #layouts .plan-view{appearance:none;-webkit-appearance:none;border:0;background:transparent;margin:0;padding:0 14px;min-height:34px;font:600 12px/1.2 var(--fb);letter-spacing:.02em;color:var(--paper-fg);cursor:pointer;touch-action:manipulation}
+.nx #layouts .plan-view+.plan-view{border-left:1.5px solid rgba(41,50,24,.22)}
+.nx #layouts .plan-view[aria-selected="true"]{background:var(--paper-fg);color:var(--paper-bg)}
+.nx #layouts .plan-view:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+@media(min-width:1024px){.nx #layouts .unit-plan{padding:76px 34px 34px;min-height:640px}.nx #layouts .unit-plan img{max-height:530px}}
 .nx #layouts .calc{background:#fff;border:1px solid rgba(41,50,24,.1);border-top:none;border-radius:0 0 4px 4px}
 .nx #layouts .calc h3{color:var(--paper-label)}
 .nx #layouts .cprice .cl,.nx #layouts .cfield label{color:var(--paper-label);opacity:1}
@@ -3008,12 +3030,12 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
 #story .sec-head .copy{color:var(--night-fg)}
 .story-art{position:absolute;inset:0;z-index:0;min-height:0;background:var(--night-bg) 70% 45%/cover no-repeat}
 html.hero-more .story-art{background-image:url('assets/gal-aerial-2x.webp')}
-.story-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,18,8,.74) 0%,rgba(14,18,8,.44) 30%,rgba(14,18,8,.06) 52%,rgba(14,18,8,.34) 100%)}
+.story-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,18,8,.82) 0%,rgba(14,18,8,.74) 30%,rgba(14,18,8,.56) 44%,rgba(14,18,8,.12) 60%,rgba(14,18,8,.34) 100%)}
 @media(min-width:1024px){
   .nx #story{min-height:min(calc(100vh - 80px),820px);padding:clamp(28px,4.5vh,56px) 0 clamp(24px,4vh,48px);gap:clamp(24px,4vh,56px)}
   .story-art{background-position:center 45%}
   html.hero-more .story-art{background-image:url('assets/gal-aerial-full.webp')}
-  .story-art::after{background:linear-gradient(180deg,rgba(14,18,8,.68) 0%,rgba(14,18,8,.34) 32%,rgba(14,18,8,.04) 55%,rgba(14,18,8,.3) 100%)}
+  .story-art::after{background:linear-gradient(180deg,rgba(14,18,8,.78) 0%,rgba(14,18,8,.62) 30%,rgba(14,18,8,.34) 46%,rgba(14,18,8,.04) 62%,rgba(14,18,8,.3) 100%)}
   #story .sec-head h2{font-size:clamp(28px,2.7vw,40px)}
   #story .sec-head .copy{max-width:60ch}
 }
@@ -3153,6 +3175,23 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 /* Google Maps and Waze are directions, not the price ask: outline */
 #loc .loc-panel .btn-p,#loc .loc-panel .btn-s{background:transparent !important;border:1px solid rgba(240,228,209,.45) !important;color:var(--night-fg) !important;box-shadow:none !important;-webkit-backdrop-filter:none;backdrop-filter:none}
 #loc .loc-panel .btn-p:hover,#loc .loc-panel .btn-s:hover{background:rgba(240,228,209,.12) !important;border-color:var(--night-fg) !important}
+/* round 2 (16 Oct, rule A2): reading order title, tabs, map, details. One grid, four direct children; on desktop the tabs
+   span above the map and the details sit beside it (map left, list right), the list staying in view beside the tall map. */
+#loc .loc-content{grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
+#loc .loc-head-float,#loc .loc-tabs-row,#loc .loc-map-bg,#loc .loc-info{order:0;min-width:0}
+#loc .loc-head-float{margin-bottom:2px}
+#loc .loc-tabs-row .loc-cats{margin-bottom:0}
+#loc .loc-info{gap:0}
+#loc .nx .loc-list{border-top:0}
+#loc .nx .loc-item:first-child{padding-top:2px}
+#loc .nx .loc-item:last-child{border-bottom:0} /* the Maps / Waze row's own top rule closes the list: one hairline, not two */
+@media(min-width:1024px){
+  #loc .loc-content{grid-template-columns:minmax(0,1.15fr) minmax(0,440px);grid-template-areas:"head head" "tabs tabs" "map list";gap:26px 40px;align-items:start}
+  #loc .loc-head-float{grid-area:head;margin-bottom:6px}
+  #loc .loc-tabs-row{grid-area:tabs}
+  #loc .loc-map-bg{grid-area:map;align-self:start}
+  #loc .loc-info{grid-area:list;position:sticky;top:calc(var(--nav-h,64px) + 24px)}
+}
 
 /* ---------- developer and the answers on paper ---------------------------------- */
 .nx #developer,.nx #faq{background:var(--paper-bg);color:var(--paper-fg)}
@@ -3184,7 +3223,9 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 .nx #visit .visit-acts .btn-p:hover{background:rgba(89,77,10,.08) !important;transform:none}
 .nx #visit .visit-acts .btn-s{background:transparent !important;border:1.5px solid rgba(41,50,24,.3) !important;color:var(--paper-fg) !important;box-shadow:none !important}
 .nx #visit .visit-acts .btn-s:hover{background:rgba(41,50,24,.06) !important}
-@media(max-width:759px){.nx #visit .visit{margin:0 calc(var(--pad) * -1);border-radius:0}}
+/* round 2 (16 Oct): on phones the card sits inset on the sand ground, 16 px side margins and the 4 px radius (the other
+   Clones' closing form). Full-bleed, the gradient survived only as two flat strips above and below the card. */
+@media(max-width:759px){.nx #visit .wrap{padding:0 16px}.nx #visit .visit{margin:0;border-radius:4px}.nx #visit .visit-l{padding:32px 22px 30px}.nx #visit .form-card{padding:26px 20px 28px}}
 
 /* ---------- get in touch and the footer on night ---------------------------------- */
 .git{background:var(--night2-bg);border-top:1px solid var(--night-br);color:var(--night-fg)}
@@ -3450,8 +3491,16 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
     </div>
 
     <div class="unit rv">
-      <div class="unit-plan" id="planWrap">
-        <span class="unit-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
+      <div class="unit-plan" id="planWrap" data-plan-view="floor">
+        <!-- round 2 (16 Oct 2026): Floor plan | Key plan toggle inside the plan box, on one bar with the enlarge hint. The
+             key plan is one file for all five types (assets/fp-keyplan.webp); a unit change resets the view to the floor plan. -->
+        <div class="plan-top">
+          <div class="plan-views" id="planViews" role="tablist" aria-label="Plan view">
+            <button type="button" class="plan-view" role="tab" aria-selected="true" data-plan-view="floor">Floor plan</button>
+            <button type="button" class="plan-view" role="tab" aria-selected="false" data-plan-view="key">Key plan</button>
+          </div>
+          <span class="unit-zoom"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Tap to enlarge</span>
+        </div>
         <img loading="lazy" decoding="async" id="planImg" src="assets/fp-detail-a-hd.webp" alt="Type A floor plan, 721 sq ft" width="876" height="1095">
       </div>
       <div class="unit-info">
@@ -3473,11 +3522,11 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
               <div class="price-val num">Freehold</div>
             </div>
           </div>
+        <!-- round 2 (16 Oct 2026): the key plan thumbnail moved into the plan box as the Key plan view; the two interior shots stay -->
         <div class="unit-shots">
-            <button class="ushot" type="button" data-src="assets/fp-keyplan.webp"><img loading="lazy" decoding="async" src="assets/fp-keyplan.webp" alt="M Amaya keyplan showing unit orientation"></button>
             <button class="ushot" type="button" data-src="assets/chair.jpg"><img loading="lazy" decoding="async" src="assets/chair.jpg" alt="Interior mood, living area"></button>
             <button class="ushot" type="button" data-src="assets/people-reading.jpg"><img loading="lazy" decoding="async" src="assets/people-reading.jpg" alt="Interior mood, reading corner"></button>
-            <span class="ushot-note">Keyplan and interior mood. Tap to view.</span>
+            <span class="ushot-note">Interior mood. Tap to view.</span>
           </div>
           <div class="unit-acts">
           <button class="btn btn-p" id="uCta" data-open-lead="unit_card" data-unit="Type A" data-cta-id="units_price_list">Get Price List Now</button>
@@ -3848,35 +3897,25 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 <!-- LOCATION -->
 <section id="loc" class="loc-hero pg-night">
   <div class="sbg" aria-hidden="true"></div><div class="sbd sbd--dark-l" aria-hidden="true"></div>
+  <!-- round 2 (16 Oct 2026, rule A2): reading order title, tabs, map, details. The four blocks are direct children of
+       one grid; on desktop the tabs span above the map and the details sit beside it (map left, list right). The map,
+       its zoom engine and the tab JS are untouched; every id stays. -->
   <div class="loc-content">
-    <div class="loc-info">
     <div class="loc-head-float">
       <h2 class="stl" style="margin-bottom:8px">Prime location near <em style="font-style:normal;color:var(--bronze)">Batu Maung</em></h2>
       <p class="sdesc" style="margin-bottom:0">Tun Dr. Lim Chong Eu Expressway, Bayan Lepas FIZ and the Penang Second Bridge, all within reach of a quieter hillside address.</p>
     </div>
 
-    <div class="loc-panel fi">
-      <!-- R2: categories extended with the landmark, school, mall and hospital
-           distances from the client's own M Amaya design kit (area board). -->
-      <div class="nx"><div class="loc-cats" id="locCats" role="tablist" aria-label="Nearby categories">
-          <button class="loc-cat" role="tab" aria-selected="true" data-cat="transport">Transport</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="work">Work</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="malls">Malls</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="schools">Schools</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="health">Health</button>
-          <button class="loc-cat" role="tab" aria-selected="false" data-cat="landmarks">Landmarks</button>
-        </div>
-        <div class="loc-list" id="locList"></div></div>
-      <!-- R3 (Justin item 8): source note removed; sourcing stays documented in
-           rebuild-direction.md -->
-
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(89,77,10,.18);display:flex;gap:10px;flex-wrap:wrap">
-        <a href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener" class="btn btn-p" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Google Maps &rarr;</a>
-        <a href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener" class="btn btn-s" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Open in Waze &rarr;</a>
-      </div>
-    </div>
-
-    </div>
+    <!-- R2: categories extended with the landmark, school, mall and hospital
+         distances from the client's own M Amaya design kit (area board). -->
+    <div class="nx loc-tabs-row"><div class="loc-cats" id="locCats" role="tablist" aria-label="Nearby categories">
+        <button class="loc-cat" role="tab" aria-selected="true" data-cat="transport">Transport</button>
+        <button class="loc-cat" role="tab" aria-selected="false" data-cat="work">Work</button>
+        <button class="loc-cat" role="tab" aria-selected="false" data-cat="malls">Malls</button>
+        <button class="loc-cat" role="tab" aria-selected="false" data-cat="schools">Schools</button>
+        <button class="loc-cat" role="tab" aria-selected="false" data-cat="health">Health</button>
+        <button class="loc-cat" role="tab" aria-selected="false" data-cat="landmarks">Landmarks</button>
+      </div></div>
 
     <!-- R3 (Justin items 4 + 8): the map fits its frame (contain, no crop) and
          zooms on the spot; the chip still opens it full screen.
@@ -3893,6 +3932,19 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
         <button class="fz-btn fz-reset" type="button" aria-label="Reset zoom"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 16v-6h6"/></svg></button>
       </div>
       <img loading="lazy" decoding="async" src="assets/loc-map-v3.webp" alt="M Amaya location map: Southbay City, Batu Maung, with the Penang First and Second Bridges, Penang International Airport, the upcoming Mutiara LRT line and Penang Silicon Island" class="fac-base" width="1563" height="2117">
+    </div>
+
+    <div class="loc-info">
+    <div class="loc-panel fi">
+      <div class="nx"><div class="loc-list" id="locList"></div></div>
+      <!-- R3 (Justin item 8): source note removed; sourcing stays documented in
+           rebuild-direction.md -->
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(89,77,10,.18);display:flex;gap:10px;flex-wrap:wrap">
+        <a href="https://www.google.com/maps/search/?api=1&query=M+Amaya+Southbay+City+Batu+Maung+Penang" target="_blank" rel="noopener" class="btn btn-p" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Google Maps &rarr;</a>
+        <a href="https://waze.com/ul/hw0zq4450j" target="_blank" rel="noopener" class="btn btn-s" style="flex:1;min-width:120px;font-size:12px;padding:10px 16px">Open in Waze &rarr;</a>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -4327,7 +4379,7 @@ function flipCard(id){document.getElementById(id).classList.toggle('flipped')}
 var fpState={scale:1,tx:0,ty:0,dragging:false,sx:0,sy:0};
 /* premium port (16 Oct 2026, spec R1): every zoom carries the ask. On a floor plan it names the type (the plan's alt
    starts 'Type X floor plan'); elsewhere it is the general price-list ask. */
-function lbAskFor(alt){var a=document.getElementById('lbAsk');if(!a)return;var m=/^Type ([A-E]) floor plan/.exec(alt||'');
+function lbAskFor(alt){var a=document.getElementById('lbAsk');if(!a)return;var m=/^Type ([A-E]) (?:floor|key) plan/.exec(alt||''); /* round 2: the key plan, opened from the unit's plan box, keeps that unit's ask */
   if(m){a.textContent='Get the Type '+m[1]+' price list';a.setAttribute('data-unit','Type '+m[1]);a.setAttribute('data-open-lead','floorplan_zoom');a.setAttribute('data-cta-id','floorplan_zoom_get_price');}
   else{a.textContent='Get Price List Now';a.removeAttribute('data-unit');a.setAttribute('data-open-lead','zoom');a.setAttribute('data-cta-id','zoom_get_price');}}
 function fpOpen(src,alt){
@@ -5238,11 +5290,19 @@ window.z21Track = function (name, params) {
       return { gallery: /keyplan/i.test(u.getAttribute('data-src') || '') ? 'siteplan' : 'gallery',
         item_index: list('.ushot').indexOf(u) + 1, item_label: ui && ui.alt.slice(0, 60) };
     }
-    if (t.closest('#planWrap')) {
+    var pw = t.closest('#planWrap');
+    if (pw) {
       var tabs = list('#tabs .tab'), sel = 0;
       tabs.forEach(function (x, i) { if (x.getAttribute('aria-selected') === 'true') sel = i; });
       var pi = document.getElementById('planImg');
-      return { gallery: 'floorplan', item_index: sel + 1, item_label: pi && pi.alt.slice(0, 60) };
+      /* round 2 (16 Oct): the key plan reports as gallery 'keyplan' (the thumbnail that sent 'siteplan' is gone). A tap on
+         the Key plan toggle counts once the view has switched (not again while the key plan already shows); a tap on the
+         plan itself counts once the zoom has opened. */
+      var pv = t.closest('#planViews .plan-view');
+      if (pv && (pv.getAttribute('data-plan-view') !== 'key' || pw.getAttribute('data-plan-view') === 'key')) return null;
+      var keyView = pv ? true : pw.getAttribute('data-plan-view') === 'key';
+      return { gallery: keyView ? 'keyplan' : 'floorplan', item_index: sel + 1,
+        item_label: pv ? ('Type ' + (tabs[sel] ? tabs[sel].getAttribute('data-type') : '') + ' key plan') : (pi && pi.alt.slice(0, 60)) };
     }
     var z = t.closest('[data-fp-zoom]');
     if (z) {
@@ -5306,8 +5366,13 @@ window.z21Track = function (name, params) {
       var lb = document.getElementById('fpLb');
       var gi = (!lb || !lb.classList.contains('open')) ? galleryInfo(t) : null;
       if (gi) {
+        var planToggle = !!t.closest('#planViews'); /* round 2: the toggle opens no zoom; it counts once the key plan shows */
         setTimeout(function () {
-          try { if (lb && lb.classList.contains('open')) track('gallery_open', gi); } catch (err) {}
+          try {
+            var pwEl = document.getElementById('planWrap');
+            var shown = planToggle ? !!(pwEl && pwEl.getAttribute('data-plan-view') === 'key') : !!(lb && lb.classList.contains('open'));
+            if (shown) track('gallery_open', gi);
+          } catch (err) {}
         }, 0);
         return;
       }
@@ -5405,6 +5470,18 @@ window.z21Track = function (name, params) {
   var wf=$('waFloat'); if(wf)wf.href=waLink('');
   var fw=$('footWa'); if(fw)fw.href=waLink('');
 
+  /* round 2 (16 Oct 2026): Floor plan | Key plan inside the plan box. One key plan serves all five types; a unit change
+     always comes back to the floor plan. The enlarge opens whichever view is showing (the key plan has no full file). */
+  var KEYPLAN='assets/fp-keyplan.webp';
+  function setPlanView(v){
+    var wrap=$('planWrap'),img=$('planImg'),u=UNITS[cur];
+    if(!wrap||!img)return;
+    wrap.setAttribute('data-plan-view',v);
+    if(v==='key'){img.src=KEYPLAN;img.alt='Type '+cur+' key plan, where each type sits on a typical floor and its view';}
+    else{img.src=u.plan;img.alt='Type '+cur+' floor plan, '+u.size+' sq ft';}
+    Array.prototype.forEach.call(document.querySelectorAll('#planViews .plan-view'),function(b){
+      b.setAttribute('aria-selected',String(b.getAttribute('data-plan-view')===v));});
+  }
   function render(){
     var u=UNITS[cur];
     $('uName').textContent=cur; $('uCfg').textContent=u.cfg;
@@ -5412,8 +5489,7 @@ window.z21Track = function (name, params) {
     $('uExtra').textContent=u.extra; $('uExtraLab').textContent=u.extraLab;
     $('uSize').textContent=u.size;
     $('uPrice').innerHTML=u.price+(u.price.indexOf('RM')>-1?'<sup>*</sup>':'');
-    var img=$('planImg'); img.src=u.plan;
-    img.alt='Type '+cur+' floor plan, '+u.size+' sq ft';
+    setPlanView('floor');
     $('planWrap').setAttribute('data-full',u.full);
     var cta=$('uCta'); cta.setAttribute('data-unit','Type '+cur);
     cta.textContent='Get Price List Now';
@@ -5487,8 +5563,13 @@ window.z21Track = function (name, params) {
   })();
 
   /* R2: the floor plan opens in the ZOOM lightbox (fp-lb), not the flat one */
-  $('planWrap').addEventListener('click',function(){
-    fpOpen(this.getAttribute('data-full')||$('planImg').src,$('planImg').alt);});
+  $('planWrap').addEventListener('click',function(e){
+    if(e.target.closest&&e.target.closest('#planViews'))return; /* round 2: the view toggle switches the plan, it does not enlarge */
+    var key=this.getAttribute('data-plan-view')==='key';
+    fpOpen(key?KEYPLAN:(this.getAttribute('data-full')||$('planImg').src),$('planImg').alt);});
+  Array.prototype.forEach.call(document.querySelectorAll('#planViews .plan-view'),function(b){
+    b.addEventListener('click',function(){setPlanView(b.getAttribute('data-plan-view'));});
+  });
   /* nearby places. Transport/work rows carry the LIVE site's published
      distances; malls/schools/health/landmarks come from the client's design
      kit area board (Figma node 31:1028). Where the two disagree (Queensbay,
