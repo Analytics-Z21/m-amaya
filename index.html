@@ -2896,24 +2896,44 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
   .trust .tr-num{font-size:clamp(30px,3.1vw,46px)}
 }
 
-/* ---------- quick form on night, the card white ---------------------------- */
-/* round 2 (16 Oct): the live build's textured sand returns behind the quick form: the live sand #bba98a with its .sbg grain
-   layer (same tile, size and soft-light blend, at the live grain-hi .61), darkened by a warm bronze veil running the same
-   105deg as the live bronze panel (#483826 to #715D43 as painted), so the champagne copy holds 4.5:1 across the width and
-   the white card lifts off it. Only this ground changes; the rest of the page keeps the night rhythm. */
-.nx #quickRegister{background:linear-gradient(105deg,rgba(50,34,18,.84) 0%,rgba(66,47,27,.78) 45%,rgba(84,64,40,.72) 100%),#bba98a;border-bottom:1px solid var(--night-br)}
-#quickRegister .sbg{display:block;position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('assets/grain-tile.png');background-size:256px;mix-blend-mode:soft-light;opacity:.61}
-#quickRegister .copy,.nx #quickRegister .copy,#quickRegister .qx-points div{color:var(--night-fg)}
-#quickRegister .eyebrow,.nx #quickRegister .eyebrow{color:var(--night-fg)}
-#quickRegister h2 .em,.nx #quickRegister .em{color:#E2D0BC}
-.qx,.visit{background:none;padding:0;isolation:auto;overflow:visible}
-.qx::before,.qx::after,.visit::before,.visit::after{content:none}
-#quickRegister .qx-points{display:grid;gap:12px;margin-top:22px;justify-items:start}
-#quickRegister .qx-points div{display:flex;align-items:center;gap:12px;font:600 13.5px/1.5 var(--fb);color:var(--night-fg);border:0;padding:0;margin:0} /* round 2: full champagne on the sand (the .76 mute read under 4.5:1 there) */
-#quickRegister .qx-points div span{display:inline-flex;flex:none;width:26px;height:26px;border-radius:50%;border:1px solid rgba(240,228,209,.4);align-items:center;justify-content:center}
-#quickRegister .qx-points div span::before{content:"\2713";color:var(--night-accent);font-weight:700;font-size:12px;line-height:1}
-.nx #quickRegister .form-card{background:#fff;color:var(--paper-fg);border:0;border-radius:4px;padding:28px 24px;box-shadow:0 40px 90px -40px rgba(0,0,0,.6)}
-@media(min-width:1024px){.nx #quickRegister .form-card{padding:36px 38px}}
+/* ---------- quick form: the live bronze panel on the sand ground ------------- */
+/* round 3 (16 Oct, Justin): #quickRegister goes back to the live ver2 design (origin/main, "bronze panels: quick register"
+   and the sandbase ground): the light sand #bba98a with its .sbg grain, a bronze gradient panel inset on it (dark bronze
+   left, warm bronze right, the soft bloom, the overlay grain), the copy and the perks as plain hairline rows (no tick
+   circles), the fields straight on the panel (cream caps labels, translucent cream inputs, no card), a full-width
+   champagne submit with dark caps text, the consent centred. Replaces the round-2 white card on the bronze veil. */
+.nx #quickRegister{background:#bba98a;border-bottom:0}
+#quickRegister .sbg{display:block;position:absolute;inset:0;z-index:-1;pointer-events:none;background:url('assets/grain-tile.png');background-size:256px;mix-blend-mode:soft-light;opacity:.45}
+.visit{background:none;padding:0;isolation:auto;overflow:visible}
+.visit::before,.visit::after{content:none}
+#quickRegister .qx{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(300px 120px at 100% 100%,rgba(203,184,158,.6),rgba(203,184,158,0) 100%),linear-gradient(105deg,#4f3620 0%,#684a2b 28%,#7d5935 58%,#815d38 80%,#876440 100%);padding:58px 50px}
+#quickRegister .qx::before{content:'';position:absolute;inset:-40% 46% -12% -26%;z-index:-1;background:radial-gradient(50% 50% at 50% 50%,rgba(255,240,215,.3),rgba(255,240,215,0) 70%);filter:blur(70px);pointer-events:none}
+#quickRegister .qx::after{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/grain-tile.png');background-size:256px;mix-blend-mode:overlay;opacity:.28;pointer-events:none}
+@media(max-width:759px){.nx #quickRegister .wrap{padding:0 16px}#quickRegister .qx{padding:40px 22px;background:radial-gradient(160px 46px at 100% 100%,rgba(203,184,158,.6),rgba(203,184,158,0) 100%),linear-gradient(105deg,#4f3620 0%,#684a2b 28%,#7d5935 58%,#815d38 80%,#876440 100%)}}
+#quickRegister .eyebrow,.nx #quickRegister .eyebrow{color:rgba(250,243,233,.9)}
+#quickRegister h2,.nx #quickRegister h2{color:#faf3e9;font-size:clamp(34px,3.6vw,52px);line-height:1.06}
+#quickRegister h2 .em,.nx #quickRegister .em{color:#e6cfa4;display:block}
+#quickRegister .copy,.nx #quickRegister .copy{color:rgba(250,243,233,.9)}
+#quickRegister .qx-points{display:grid;gap:0;margin-top:24px;justify-items:stretch}
+#quickRegister .qx-points div{display:flex;align-items:center;gap:0;border-top:1px solid rgba(250,243,233,.22);padding:10px 0 0;margin:9px 0 0;font:300 14px/1.5 var(--fb);color:rgba(250,243,233,.92)}
+#quickRegister .qx-points div span{display:none}
+.nx #quickRegister .form-card{background:transparent;color:inherit;border:0;border-radius:0;box-shadow:none;padding:0}
+.nx #quickRegister .f-label{color:#faf3e9}
+.nx #quickRegister .f-input{background:rgba(250,243,233,.94);border:1px solid rgba(250,243,233,.5);color:#3b3021}
+.nx #quickRegister .f-input::placeholder{color:#75654d}
+.nx #quickRegister .btn-p[type=submit]{background:#e6cfa4 !important;color:#4a3c1f !important;border-color:#e6cfa4 !important;width:100%;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12px}
+.nx #quickRegister .btn-p[type=submit]:hover{background:#f1e5cd !important;color:#4a3c1f !important;border-color:#f1e5cd !important}
+.nx #quickRegister .f-consent{color:rgba(250,243,233,.95)}
+.nx #quickRegister .f-consent a{color:#faf3e9}
+.nx #quickRegister .f-input:focus{outline:2px solid #faf3e9;outline-offset:2px}
+/* the form-level error line keeps its live red text inline; on the bronze it takes the per-field error chip's ground */
+#quickRegister [data-form-error]{color:#8c1d18 !important;background:#fdecea;padding:3px 8px;border-radius:6px}
+/* Measured against live, for 4.5:1 on small text at 390 and 1440 (tools/contrast_audit.mjs + .py): the live panel
+   read 1.9 to 4.3:1 on the labels, consent, links, eyebrow and copy, and the perks at 390 (its right third runs
+   to #a68a63 and #c3af98, and the text sits at .7 to .85 cream). Kept: the stops' character and the 105deg run, the bloom, the
+   grain, the champagne submit (7.0:1). Changed: the right-hand stops end at #876440 (the light run is now a
+   bottom-right corner bloom below the consent), the eyebrow and copy at .9, perks .92, labels and links solid cream,
+   consent .95, placeholders #75654d (4.6:1 on the cream field, was #8a7a60 at 3.4:1), a cream focus ring. */
 .nx .f-label{color:var(--paper-label)}
 .nx .f-input,.nx select.f-input{border-color:rgba(41,50,24,.22);border-radius:2px}
 .nx .f-input:focus{outline-color:var(--olive)}
@@ -2939,10 +2959,7 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
 .nx #layouts .specs span{color:#5F5C3E;opacity:1}
 .nx #layouts .price-lab{color:#5F5C3E;opacity:1}
 .nx #layouts .price-val{color:var(--olive)}
-.nx #layouts .ushot{border-color:rgba(41,50,24,.12);background:var(--paper-bg)}
-.nx #layouts .ushot-note{color:var(--paper-mute);opacity:1}
-/* round 2 (16 Oct): two interior shots now (the key plan lives in the plan box) */
-.nx #layouts .unit-shots{grid-template-columns:repeat(2,1fr)}
+/* round 3 (16 Oct, item 4): the unit card's interior shots and their rules are gone */
 /* round 2 (16 Oct): Floor plan | Key plan toggle inside the plan box, on one bar with the enlarge hint; the box gains head
    room so the plan clears the bar. Selected view takes ink, as the layout tabs do (never the ask colour). */
 .nx #layouts .unit-plan{padding:70px 20px 24px}
@@ -2979,7 +2996,6 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
   .nx #layouts .unit{display:flex;flex-direction:column}
   .nx #layouts .unit-info{order:-1;display:flex;flex-direction:column;padding:20px 22px 22px}
   .nx #layouts .unit-info>*{order:0}
-  .nx #layouts .unit-shots{order:1;margin:16px 0 0}
   .nx #layouts .unit-plan{border-bottom:none;border-top:1px solid rgba(41,50,24,.1)}
   .nx #layouts .price-duo{margin:18px 0 16px}
 }
@@ -3522,12 +3538,9 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
               <div class="price-val num">Freehold</div>
             </div>
           </div>
-        <!-- round 2 (16 Oct 2026): the key plan thumbnail moved into the plan box as the Key plan view; the two interior shots stay -->
-        <div class="unit-shots">
-            <button class="ushot" type="button" data-src="assets/chair.jpg"><img loading="lazy" decoding="async" src="assets/chair.jpg" alt="Interior mood, living area"></button>
-            <button class="ushot" type="button" data-src="assets/people-reading.jpg"><img loading="lazy" decoding="async" src="assets/people-reading.jpg" alt="Interior mood, reading corner"></button>
-            <span class="ushot-note">Interior mood. Tap to view.</span>
-          </div>
+        <!-- round 3 (16 Oct 2026, item 4): the two interior mood shots and their note are gone from the card (the key plan
+             is the Key plan view of the plan box since round 2), so the empty .unit-shots block is removed. Both photos
+             stay on the page in the interiors carousel. -->
           <div class="unit-acts">
           <button class="btn btn-p" id="uCta" data-open-lead="unit_card" data-unit="Type A" data-cta-id="units_price_list">Get Price List Now</button>
           </div>
