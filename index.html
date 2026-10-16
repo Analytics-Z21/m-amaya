@@ -2997,27 +2997,43 @@ html.hero-more .hs-4{background-image:url('assets/hero-zen-mob.webp')}
 .sc-stats span{display:block;font:600 11px/1.4 var(--fb);letter-spacing:.14em;text-transform:uppercase;color:var(--night-fg);margin-top:6px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 
 /* ---------- the story: a full-bleed aerial with glass cards over it, then the reasons as a list ---------- */
-.nx #story{background:var(--night-bg);padding-bottom:clamp(64px,8vw,120px)}
-.nx #story .sec-head{margin-bottom:clamp(28px,3vw,44px)}
-/* the sand gradient's second moment: the aerial fades in from sand-brown at its top and into night at its foot */
-.story-art{position:relative;min-height:min(72vh,640px);background:var(--night-bg) center 35%/cover no-repeat}
-html.hero-more .story-art{background-image:linear-gradient(180deg,var(--night-bg) 0%,rgba(31,38,18,0) 22%),
-  linear-gradient(0deg,var(--night-bg) 0%,rgba(31,38,18,.55) 22%,rgba(182,167,130,.14) 44%,rgba(31,38,18,0) 62%),url('assets/gal-aerial-2x.webp')}
+/* STORY (16 Oct review, Justin): the aerial IS the section's background, on phones and desktop, with the heading
+   and the three cards over it. No wash: only a neutral darkening at the top and foot so the champagne text reads
+   over the sky. The image is landscape (1416x896) with the towers right of centre, so phones crop to 70%. */
+.nx #story{position:relative;overflow:hidden;background:var(--night-bg);padding:clamp(48px,7vh,80px) 0 clamp(36px,5vh,64px);
+  min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;gap:clamp(40px,7vh,88px)}
+.nx #story .wrap{position:relative;z-index:1}
+.nx #story .sec-head{margin-bottom:0}
+#story .sec-head h2,#story .sec-head .eyebrow,#story .sec-head .copy{text-shadow:0 2px 14px rgba(0,0,0,.5)}
+#story .sec-head .copy{color:var(--night-fg)}
+.story-art{position:absolute;inset:0;z-index:0;min-height:0;background:var(--night-bg) 70% 45%/cover no-repeat}
+html.hero-more .story-art{background-image:url('assets/gal-aerial-2x.webp')}
+.story-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,18,8,.74) 0%,rgba(14,18,8,.44) 30%,rgba(14,18,8,.06) 52%,rgba(14,18,8,.34) 100%)}
 @media(min-width:1024px){
-  .story-art{min-height:min(84vh,780px)}
-  html.hero-more .story-art{background-image:linear-gradient(180deg,var(--night-bg) 0%,rgba(31,38,18,0) 20%),
-    linear-gradient(0deg,var(--night-bg) 0%,rgba(31,38,18,.5) 24%,rgba(182,167,130,.12) 42%,rgba(31,38,18,0) 60%),url('assets/gal-aerial-full.webp')}
+  .nx #story{min-height:min(calc(100vh - 80px),820px);padding:clamp(28px,4.5vh,56px) 0 clamp(24px,4vh,48px);gap:clamp(24px,4vh,56px)}
+  .story-art{background-position:center 45%}
+  html.hero-more .story-art{background-image:url('assets/gal-aerial-full.webp')}
+  .story-art::after{background:linear-gradient(180deg,rgba(14,18,8,.68) 0%,rgba(14,18,8,.34) 32%,rgba(14,18,8,.04) 55%,rgba(14,18,8,.3) 100%)}
+  #story .sec-head h2{font-size:clamp(28px,2.7vw,40px)}
+  #story .sec-head .copy{max-width:60ch}
 }
 @supports (animation-timeline: view()){
-  @media(prefers-reduced-motion:no-preference){
+  @media(prefers-reduced-motion:no-preference) and (min-width:1024px){
     .story-art{animation:am-par linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
   }
 }
-@keyframes am-par{from{background-position:center 18%}to{background-position:center 72%}}
-#story .story-cards{position:relative;z-index:2;margin-top:max(-16vh,-140px);display:grid;gap:14px}
-@media(min-width:760px){#story .story-cards{grid-template-columns:repeat(3,1fr);gap:18px;margin-top:max(-22vh,-200px)}}
+@keyframes am-par{from{background-position-y:30%}to{background-position-y:60%}}
+.sec-amen{background:var(--night-bg);padding:clamp(48px,6vw,88px) 0}
+#story .story-cards{position:relative;z-index:1;margin-top:0;display:grid;grid-auto-flow:column;grid-auto-columns:min(78vw,320px);gap:12px;
+  overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;margin-inline:-24px;padding-inline:24px;scrollbar-width:none}
+#story .story-cards::-webkit-scrollbar{display:none}
+#story .st-card{scroll-snap-align:start}
+#story .st-card img{display:none}
+@media(min-width:760px){#story .story-cards{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;gap:18px;margin-inline:0;padding-inline:0;overflow:visible}}
+@media(min-width:1024px){#story .st-body{padding:18px 20px 20px}#story .st-body p{font-size:13.5px;line-height:1.6}}
 .st-card{background:rgba(31,38,18,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(240,228,209,.12);margin:0;overflow:hidden}
-.st-card img{width:100%;height:190px;object-fit:cover;display:block}
+.st-card img{width:100%;height:150px;object-fit:cover;display:block}
+@media(min-width:1024px){.st-card img{height:160px}}
 .st-card--ray img{object-fit:cover;background:#1F2612;object-position:center 30%}
 .st-body{padding:22px 22px 24px}
 .st-n{font:600 11px/1.5 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--night-accent)}
@@ -3533,7 +3549,7 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
      into one section — three open story cards (no tap-to-read; the copy shows)
      + the amenity tiles, on the sandbase dome ground. -->
 <section class="sec pg-night" id="story">
-  <div class="sbg" aria-hidden="true"></div><div class="sbd sbd--dark-l" aria-hidden="true"></div>
+  <div class="story-art" role="img" aria-label="Aerial view of M Amaya on Penang's southern shore"></div>
   <div class="wrap">
     <div class="sec-head rv">
       <span class="eyebrow">The M Amaya story</span>
@@ -3541,8 +3557,7 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
       <p class="copy">Designed to embrace natural daylight, gentle views and breathable spaces, this is a home where architecture and atmosphere converse quietly, allowing living to feel intuitive, balanced and unforced.</p>
     </div>
   </div>
-  <!-- premium port (16 Oct 2026): the aerial, full-bleed, loads after the page is ready; the cards sit over its foot -->
-  <div class="story-art" role="img" aria-label="Aerial view of M Amaya on Penang's southern shore"></div>
+  <!-- premium port (16 Oct 2026): the aerial is the section's background; the cards sit at its foot -->
   <div class="wrap">
     <div class="story-cards rv" data-stagger>
       <article class="st-card">
@@ -3570,6 +3585,12 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
         </div>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- the amenities list on its own ground (16 Oct review): it sat inside the story section under the cards and stretched it -->
+<section class="sec pg-night sec-amen" id="story-amenities" aria-label="M Amaya amenities">
+  <div class="wrap">
     <div class="amen-grid rv" data-stagger>
       <div class="amen"><img loading="lazy" decoding="async" src="assets/icon-shop-fnb.png" alt=""><div><b>Shops and F&amp;B</b><span>Retail and dining at the doorstep</span></div></div>
       <div class="amen"><img loading="lazy" decoding="async" src="assets/icon-welcome-lobby.png" alt=""><div><b>Welcome Lobby &amp; Guest Lounge</b><span>An arrival that sets the tone</span></div></div>
