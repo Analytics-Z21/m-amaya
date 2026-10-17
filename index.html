@@ -3296,6 +3296,28 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
    screen 1, which the foot placement now does by itself); the lockup and the status line stay hidden and the place
    stays (rounds 1 and 4) */
 @media(max-width:767px) and (max-height:600px){.hero{--hs-copy:242px}.hero .h-trust{display:block}}
+/* Round 6 (18 Oct 2026, Justin, from an iPhone 16 Pro Max at about 440x760 visible: "the hero banner got squeezed to
+   very short", then "the view port has to fix on all projects"; reference M Grand Minori c3b1ae0). Phones (767 px and
+   under): the hero is no longer held to one screen. The copy, the ask and the trust line sit at the top on the forest
+   ground, in their round-5 order; the slide sits whole below them with nothing over it and runs on past the first
+   screen, so the page reads as continuing. Every slide is 1:1.6 (160vw tall at full width) and is drawn from the
+   bottom; the facade's tallest roof starts 6% down, so the last 151vw of the hero belongs to the towers and the trust
+   line ends 40 px above that. Space above each slide is that slide's own top colour, so the slide has no hard top
+   edge. The forest stays solid behind the copy, clears over those 40 px of sky and ends at the roof; a soft fade at the
+   foot holds the caption and dots. The slow drift is anchored on the roof line, so the roof never moves into the
+   fade. Tablet and desktop unchanged. */
+@media(max-width:767px){
+  .hero .hero-media{min-height:0 !important;max-height:none !important}
+  .hero .hero-art{background-size:100% auto;background-position:center bottom;transform-origin:50% calc(100% - 151vw)}
+  .hero .hs-1{background-color:#8BA3C9}
+  .hero .hs-2{background-color:#ADABBE}
+  .hero .hs-3{background-color:#4A90C7}
+  .hero .hs-4{background-color:#745E46}
+  .hero .hero-body{flex:0 0 auto;justify-content:flex-start;padding-bottom:calc(151vw + 40px)}
+  .hero .hero-body .hero-inner{flex:0 0 auto}
+  .hero .hero-body .hero-inner .hero-ctas{margin-top:0 !important}
+  .hero .hero-scrim{background:linear-gradient(0deg,rgba(31,38,18,.8) 0,rgba(31,38,18,.72) 36px,rgba(31,38,18,.3) 66px,rgba(31,38,18,0) 100px,rgba(31,38,18,0) 151vw,rgba(31,38,18,.1) calc(151vw + 8px),rgba(31,38,18,.3) calc(151vw + 16px),rgba(31,38,18,.58) calc(151vw + 24px),rgba(31,38,18,.85) calc(151vw + 32px),var(--night-bg) calc(151vw + 40px))}
+}
 </style>
 </head>
 <body>
