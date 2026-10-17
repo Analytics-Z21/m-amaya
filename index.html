@@ -3274,6 +3274,28 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 @media(max-width:1023px) and (max-height:700px){.hero .h-place{margin-bottom:10px !important}}
 /* iPhone SE-size screens hid the place to keep the ask on screen 1; the place now stays and the status goes */
 @media(max-width:1023px) and (max-height:600px){.hero .h-place{display:flex}.hero .h-tag{display:none}}
+/* Round 5 (17 Oct 2026, Justin): the hero ask at the foot of the first screen, as on M Grand Minori. Phones (767 px and
+   under): the lockup, status, place, h1, price, fact and chips sit at the top under the nav; the hero's own ask (full
+   width) and the trust line under it sit at the foot of the hero, the bottom of the first screen; the facade shows
+   between them. The slide caption and dots stay under the trust line. The scrim is deep behind the copy (the sky and
+   the tower tops are bright), clears through the middle and deepens again behind the ask and the trust line. Tablet
+   and desktop unchanged. */
+@media(max-width:767px){
+  .hero{--hs-copy:400px}
+  .hero-scrim{background:
+    linear-gradient(180deg,rgba(31,38,18,.9) 0,rgba(31,38,18,.88) var(--hs-copy),rgba(31,38,18,0) calc(var(--hs-copy) + 120px)),
+    linear-gradient(0deg,var(--night-bg) 0,rgba(31,38,18,.9) 100px,rgba(31,38,18,.7) 150px,rgba(31,38,18,0) 210px)}
+  .hero .hero-body{justify-content:flex-start}
+  .hero .hero-body .hero-inner{flex:1 1 auto;display:flex;flex-direction:column;align-items:flex-start}
+  .hero .hero-body .hero-inner .hero-ctas{margin-top:auto !important;width:100%}
+  .hero .hero-ctas .btn{width:100%}
+}
+/* --hs-copy is where the copy stack ends (from the hero's top) on each phone height, so the deep scrim stops there */
+@media(max-width:767px) and (max-height:700px){.hero{--hs-copy:358px}}
+/* short phones (600 px tall or less): the trust line comes back under the ask (round 1 hid it to keep the ask on
+   screen 1, which the foot placement now does by itself); the lockup and the status line stay hidden and the place
+   stays (rounds 1 and 4) */
+@media(max-width:767px) and (max-height:600px){.hero{--hs-copy:242px}.hero .h-trust{display:block}}
 </style>
 </head>
 <body>
@@ -4190,17 +4212,31 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 <div class="sticky" data-section="sticky"><button type="button" class="stk stk-r" data-open-lead="sticky" data-cta-id="sticky_register">Get Price List Now</button></div>
 <button class="to-top" id="toTop" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg></button>
 <script>
-(function(){var sticky=document.querySelector('.sticky'),toTop=document.getElementById('toTop'),formInView=false,askInView=false;
-function stickyState(){var s=window.scrollY>400;toTop.classList.toggle('on',s);sticky.classList.toggle('on',s&&!formInView&&!askInView);}
+(function(){var sticky=document.querySelector('.sticky'),toTop=document.getElementById('toTop'),formInView=false,
+  forms=['quickRegister','visit','contact'].map(function(id){return document.getElementById(id)}).filter(Boolean),
+  /* Round 5 (17 Oct 2026, Justin: "when there is CTA for price hide the sticky"): every in-page price or registration
+     ask outside the nav, the mobile menu, this bar, the lead drawer and the footer (on this page: the hero ask, #uCta,
+     #cCta and #lbAsk in the zoom) */
+  asks=Array.prototype.filter.call(document.querySelectorAll('[data-open-lead],[data-cta-id*="price"],[data-cta-id*="register"]'),
+    function(a){return !a.closest('nav,header,#mobileMenu,.mobile-menu-overlay,.sticky,#leadDrawer,.lead-drawer,footer')}),
+  askHit=[];
+/* an ask counts while it is on screen above the strip the bar covers and actually painted: IntersectionObserver ignores
+   opacity, so an ask inside a closed overlay is ruled out here, when the bar updates */
+function askShown(){for(var i=0;i<asks.length;i++){var a=asks[i];if(askHit[i]&&(a.checkVisibility?a.checkVisibility({opacityProperty:true,visibilityProperty:true}):a.getClientRects().length>0))return true}return false}
+/* the 9 Oct form rule (15% of a form section in view), also read against the screen, so a form section taller than the
+   screen counts once it fills 15% of the screen, not only 15% of its own height */
+function formShown(){if(formInView)return true;for(var i=0;i<forms.length;i++){var r=forms[i].getBoundingClientRect(),v=Math.min(r.bottom,innerHeight)-Math.max(r.top,0);if(v>0&&v>=.15*Math.min(r.height,innerHeight))return true}return false}
+function stickyState(){var s=window.scrollY>400;toTop.classList.toggle('on',s);sticky.classList.toggle('on',s&&!formShown()&&!askShown());}
 window.addEventListener('scroll',stickyState,{passive:true});
 /* 2026-10-09: the bar steps aside while a form section is on screen: the quick form (now right under the hero), the
    visit form and the closing contact band, so a view never carries two identical asks (as on Aurora). It watched
    #register, an id this page does not have, so it never stepped aside before. */
 if('IntersectionObserver' in window){var seen={},fio=new IntersectionObserver(function(ents){ents.forEach(function(e){seen[e.target.id]=e.isIntersecting});formInView=Object.keys(seen).some(function(k){return seen[k]});stickyState()},{threshold:.15});
   ['quickRegister','visit','contact'].forEach(function(id){var el=document.getElementById(id);if(el)fio.observe(el)});
-  /* premium port (16 Oct 2026, Aurora item 12): the bar also steps aside while the unit-card or calculator ask is on screen */
-  var asks={},aio=new IntersectionObserver(function(ents){ents.forEach(function(e){asks[e.target.id]=e.isIntersecting});askInView=Object.keys(asks).some(function(k){return asks[k]});stickyState()},{threshold:.6});
-  ['uCta','cCta'].forEach(function(id){var el=document.getElementById(id);if(el)aio.observe(el)});}
+  /* Round 5 (17 Oct 2026): replaces the premium port's unit-card and calculator rule (16 Oct, Aurora item 12): the bar
+     steps aside while any price ask is on screen; the bottom 72 px (the strip the bar covers) does not count */
+  if(asks.length){var aio=new IntersectionObserver(function(ents){ents.forEach(function(e){askHit[asks.indexOf(e.target)]=e.isIntersecting});stickyState()},{rootMargin:'0px 0px -72px 0px',threshold:0});
+    asks.forEach(function(a){aio.observe(a)})}}
 stickyState();
 })();
 /* premium port (16 Oct 2026, Aurora R3): the desktop nav ask is an outline while the hero ask is on screen, filled after */
