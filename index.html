@@ -3318,6 +3318,57 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
   .hero .hero-body .hero-inner .hero-ctas{margin-top:0 !important}
   .hero .hero-scrim{background:linear-gradient(0deg,rgba(31,38,18,.8) 0,rgba(31,38,18,.72) 36px,rgba(31,38,18,.3) 66px,rgba(31,38,18,0) 100px,rgba(31,38,18,0) 151vw,rgba(31,38,18,.1) calc(151vw + 8px),rgba(31,38,18,.3) calc(151vw + 16px),rgba(31,38,18,.58) calc(151vw + 24px),rgba(31,38,18,.85) calc(151vw + 32px),var(--night-bg) calc(151vw + 40px))}
 }
+/* Round 7 (19 Oct 2026, Justin, after comparing every M Aurora hero sample: "I still prefer
+   https://hero-clean.m-aurora-6we.pages.dev/ ... make sure the M Aurora logo is centre aligned ... apply to the rest 4
+   projects for preview"; reference M Aurora hero-clean d227c97). Phones (767 px and under), the clean hero; still not
+   held to the screen (round 6). Top: the copy block, centred, on a clean ground with no photo behind it: the M AMAYA
+   lockup as the lead, the status line, the place line with its pin, the h1, the price line, the fact line, the bed
+   chips, the ask full width and the trust line under it (one line where it fits at 11 px or more, else two balanced
+   centred lines). The ground is a plain gradient from the forest at the top to the facade render's own sky at the
+   band's top (#8CA5CB) exactly where the picture band starts, so there is no seam; it stays forest behind the copy and
+   turns over the last stretch under the trust line (--gap). Below: the picture band, full width; every slide (1:1.6) is
+   drawn at full width from the hero's foot, and the band (151vw + --sky tall) crops only sky, keeping --sky of it above
+   the facade's roof. Each slide carries its own last stretch of the ground (a strip over --gap that turns into that
+   slide's own colour at the band's top and fades a little way into it), so the ground meets every slide's top without a
+   seam and changes with the cross-fade. Nothing else over the band but round 6's fade at its foot behind the caption
+   and dots, now centred. The load zoom is anchored on the band's top edge, so that edge never lifts. Tablet and desktop
+   unchanged. */
+@media(max-width:767px){
+  .hero{--sky:24px;--gap:44px;--band:calc(151vw + var(--sky))}
+  .hero .hero-media{background:linear-gradient(180deg,var(--night-bg) 0,var(--night-bg) calc(100% - var(--band) - var(--gap) - 76px),#252F22 calc(100% - var(--band) - var(--gap) - 28px),#34433E calc(100% - var(--band) - var(--gap)),#5D7184 calc(100% - var(--band) - var(--gap) * .45),#8CA5CB calc(100% - var(--band)))}
+  .hero .hero-art{top:auto;height:var(--band);background-size:100% auto;background-position:center bottom;transform-origin:50% 0}
+  /* each slide's colour where the band starts (measured on the file at that depth) */
+  .hero .hs-1{--hs-top:140,165,203}
+  .hero .hs-2{--hs-top:179,175,194}
+  .hero .hs-3{--hs-top:75,145,200}
+  .hero .hs-4{--hs-top:125,108,78}
+  .hero .hero-art::before{content:'';position:absolute;left:0;right:0;top:calc(-1 * var(--gap));height:calc(var(--gap) + var(--sky) - 2px);pointer-events:none;
+    background:linear-gradient(180deg,rgba(var(--hs-top),0) 0,rgba(var(--hs-top),.3) calc(var(--gap) * .5),rgb(var(--hs-top)) var(--gap),rgba(var(--hs-top),.6) calc(var(--gap) + var(--sky) / 3),rgba(var(--hs-top),0) 100%)}
+  .hero .hero-scrim{top:auto;height:var(--band);background:linear-gradient(0deg,rgba(31,38,18,.8) 0,rgba(31,38,18,.72) 36px,rgba(31,38,18,.3) 66px,rgba(31,38,18,0) 100px)}
+  .hero .hero-body{padding-bottom:calc(var(--band) + var(--gap))}
+  /* the copy column (600 px at most) sits on the centre line on the wider portrait screens too (iPad mini, 744) */
+  .hero .hero-body .hero-inner{align-items:center;text-align:center;margin-left:auto;margin-right:auto}
+  .hero .h-logo{display:flex;align-items:center;align-self:center;margin:0 0 16px !important}
+  /* the same weight as M Aurora's mark (96 px wide there): at 80 px the M is 77 x 72 px and AMAYA 79 px wide, as
+     Aurora's M and AURORA are about 75 x 69 and 75 px; 67 px at 700 px tall or less, 47 px at 600 or less, the same
+     steps as Aurora's. The file is 144 x 213 (the tag's 414 x 398 is another lockup's size), so the box keeps the
+     file's own shape before it loads and the ask below never jumps */
+  .hero .h-logo img{width:80px;max-width:none;aspect-ratio:144/213;margin:0}
+  /* the tracking trails the last letter, so the line is padded by the same on its left to sit on the centre line */
+  .hero .h-tag{text-align:center;padding-left:.24em}
+  .hero .h-place{justify-content:center}
+  .hero h1,.hero .h-price,.hero .h-fact{text-align:center}
+  .hero .h-beds{justify-content:center}
+  .hero .h-trust{text-align:center;text-wrap:balance}
+  .hero .h-slides{left:0;right:0;justify-content:center}
+}
+/* the trust line needs 36.31 px per px of type on one line (399.4 px at 11 px), so it fits at 11 px or more inside the
+   screen less 16 px a side from 437 px wide (iPhone Pro Max, 440): one line there, into the side gutters */
+@media(min-width:437px) and (max-width:767px){.hero .h-trust{white-space:nowrap;text-wrap:nowrap;font-size:min(12.5px,calc((100vw - 32px) / 36.8));margin-left:calc(16px - var(--pad));margin-right:calc(16px - var(--pad))}}
+@media(max-width:767px) and (max-height:700px){.hero .h-logo{margin-bottom:12px !important}.hero .h-logo img{width:67px}}
+/* 600 px tall or less: the lockup comes back at 47 px and the status line comes back (round 4 hid it to keep the ask on
+   screen 1; the ask and the trust line now fit with it); a shorter turn and less sky so the roof still shows on screen 1 */
+@media(max-width:767px) and (max-height:600px){.hero{--sky:12px;--gap:32px}.hero .h-logo{display:flex;margin-bottom:8px !important}.hero .h-logo img{width:47px}.hero .h-tag{display:block}}
 </style>
 </head>
 <body>
