@@ -3395,6 +3395,20 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
   .hero .hero-inner .h-fact,.hero .hero-inner .h-beds{margin-bottom:12px!important}
 }
 </style>
+<style>
+/* 20 Oct 2026 (Justin: "I want all projects the same size, big and clear to see the project logo, and all projects to have
+   the Mah Sing logo"). Phones: the project mark is 56 px tall in the menu bar on every Clone (M Aria's size) and the
+   Mah Sing logo sits beside it at 26 px; the same at the top and in the scrolled bar. */
+@media(max-width:767px){
+  .nav-logo{display:flex!important;align-items:center;gap:12px}
+  .nav-logo img.lk{height:56px!important;width:auto!important;max-width:none!important}
+  .nav-logo img.ms{height:26px!important;width:auto!important;max-width:none!important}
+}
+</style>
+<style>
+/* 20 Oct 2026: the Mah Sing logo added to the menu bar sits at 30 px on tablet and desktop, as on M Legasi */
+@media(min-width:768px){.nav-logo{display:flex!important;align-items:center;gap:14px}.nav-logo img.ms{height:30px!important;width:auto!important;max-width:none!important}}
+</style>
 </head>
 <body>
 
@@ -3414,7 +3428,8 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
 <!-- NAV: transparent over hero, ivory-blur on scroll, centred pill + drawer -->
 <nav class="nav" id="siteNav">
   <a href="#" class="nav-logo" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})">
-    <img src="assets/mamaya-logo-menu1.png" alt="M Amaya, a Mah Sing development" width="636" height="148">
+    <img class="lk" src="assets/mamaya-logo-menu1.png" alt="M Amaya" width="129" height="194">
+    <img class="ms" src="assets/mahsing-dev-white.png" alt="A development by Mah Sing" width="461" height="146">
   </a>
 
   <ul class="nav-pill" aria-label="Primary">
@@ -3538,7 +3553,7 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
         <div class="hero-ctas">
           <button type="button" class="btn btn-p" data-open-lead="hero" data-cta-id="hero_register">Get Price List Now</button>
         </div>
-        <p class="h-trust">By Mah Sing Group Berhad<span class="h-x">, listed on the Main Market of Bursa Malaysia</span></p>
+        <!-- 20 Oct 2026 (Justin): the hero trust line removed -->
       </div>
     </div>
     <div class="h-slides">
