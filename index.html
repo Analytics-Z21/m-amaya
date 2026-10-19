@@ -6101,5 +6101,15 @@ window.addEventListener('load',function(){if(!window.FontFace||!document.fonts)r
   [['Boska','assets/boska-700i.woff2'],['Boska Medium','assets/boska-500i.woff2']].forEach(function(d){
     document.fonts.add(new FontFace(d[0],'url('+d[1]+') format("woff2")',{style:'italic',weight:'100 900',display:'swap'}));});});
 </script>
+<style>
+/* Round 9 (19 Oct 2026, Justin: "the background feels disconnected, not smooth as the others"). The ground turned to the
+   facade render's pale sky in the 44 px under the trust line, which read as a light band and a seam. Phones: the ground
+   stays the forest to the picture; the picture's top fades in from that forest over 120 px with an eased curve, so the
+   pale sky and the tower tops emerge from the dark as the darker skies do on the other Clones. */
+@media(max-width:767px){
+  .hero .hero-media{background:var(--night-bg)!important}
+  .hero .hero-art::before{top:0!important;height:120px!important;z-index:1;background:linear-gradient(180deg,rgb(31,38,18) 0,rgba(31,38,18,.86) 14%,rgba(31,38,18,.62) 34%,rgba(31,38,18,.36) 56%,rgba(31,38,18,.14) 78%,rgba(31,38,18,0) 100%)!important}
+}
+</style>
 </body>
 </html>
