@@ -4347,7 +4347,12 @@ function askShown(){for(var i=0;i<asks.length;i++){var a=asks[i];if(askHit[i]&&(
 /* the 9 Oct form rule (15% of a form section in view), also read against the screen, so a form section taller than the
    screen counts once it fills 15% of the screen, not only 15% of its own height */
 function formShown(){if(formInView)return true;for(var i=0;i<forms.length;i++){var r=forms[i].getBoundingClientRect(),v=Math.min(r.bottom,innerHeight)-Math.max(r.top,0);if(v>0&&v>=.15*Math.min(r.height,innerHeight))return true}return false}
-function stickyState(){var s=window.scrollY>400;toTop.classList.toggle('on',s);sticky.classList.toggle('on',s&&!formShown()&&!askShown());}
+/* 23 Oct 2026: the phone hero is now taller than Safari's visible screen (full-width tower banner), so the hero ask can
+   sit below the first screen. Once the ask observer has reported, the bar also shows above 400 px whenever no ask and
+   no form is on screen: on a short phone it carries the ask on the first screen and steps aside when the hero ask
+   scrolls in. Where the hero ask is on the first screen nothing changes. */
+var askReady=false;
+function stickyState(){var s=window.scrollY>400;toTop.classList.toggle('on',s);sticky.classList.toggle('on',(s||askReady)&&!formShown()&&!askShown());}
 window.addEventListener('scroll',stickyState,{passive:true});
 /* 2026-10-09: the bar steps aside while a form section is on screen: the quick form (now right under the hero), the
    visit form and the closing contact band, so a view never carries two identical asks (as on Aurora). It watched
@@ -4356,7 +4361,7 @@ if('IntersectionObserver' in window){var seen={},fio=new IntersectionObserver(fu
   ['quickRegister','visit','contact'].forEach(function(id){var el=document.getElementById(id);if(el)fio.observe(el)});
   /* Round 5 (17 Oct 2026): replaces the premium port's unit-card and calculator rule (16 Oct, Aurora item 12): the bar
      steps aside while any price ask is on screen; the bottom 72 px (the strip the bar covers) does not count */
-  if(asks.length){var aio=new IntersectionObserver(function(ents){ents.forEach(function(e){askHit[asks.indexOf(e.target)]=e.isIntersecting});stickyState()},{rootMargin:'0px 0px -72px 0px',threshold:0});
+  if(asks.length){var aio=new IntersectionObserver(function(ents){ents.forEach(function(e){askHit[asks.indexOf(e.target)]=e.isIntersecting});askReady=true;stickyState()},{rootMargin:'0px 0px -72px 0px',threshold:0});
     asks.forEach(function(a){aio.observe(a)})}}
 stickyState();
 })();
@@ -6170,14 +6175,16 @@ window.addEventListener('load',function(){if(!window.FontFace||!document.fonts)r
    the screen; on tall screens the strip under the banner's foot sits under the shade in the banner's own ground
    colour). The big lockup is off on phones (the menu bar keeps the project mark), so the shade is cut back to the
    copy band in the site's own colour: a short fade under the menu, dense behind the copy, clear above it.
-   Fit on real phones (23 Oct 2026, Justin: the facade right above the place line, as on M Aurora): at full screen
-   width the building is too tall for a phone's visible height (Safari about 659 to 695 px), so its base ran about
-   130 px behind the copy. The banner may now be drawn down to half the screen width so the base sits about 20 px
-   above the place line; the -wide file is the same banner centred on a canvas twice as wide, its sides filled with
-   its own edge colours (blurred, feathered into the original), so the screen is always covered. 463 / 481 px = the
-   first screen less the copy band, on short (max-height:700px, the page's own copy-band switch) and taller phones. */
-@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-banner-tower-phone-wide.webp')!important;--ih:max(108.527vw, calc((100svh - 481px) * 2.227));background-color:#34330b!important;background-size:auto var(--ih)!important;background-position:50% calc(112px - 0.271 * var(--ih))!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
-@media(max-width:767px) and (max-height:700px){.hero .hero-media .hero-art.hs-1{--ih:max(108.527vw, calc((100svh - 463px) * 2.227))}}
+   Real phones (23 Oct 2026, Justin: "same as the inspect mode"): the banner is always full width, as in devtools, and
+   the hero is made tall enough to hold the whole building with its base about 20 px above the place line:
+   112 px (crown) + 97.46vw (the building, 44.9% of a 217.054vw banner) + 20 px + the copy band (316 px; 294 px under
+   the page's own max-height:700px switch). Safari's visible height (about 659 to 736 px) is shorter than that, so on
+   phones the hero runs past the first screen and the chips and ask follow after a short scroll. The -wide file is
+   the same banner centred on a canvas twice as wide (lighter than the original); at full width only its centre shows.
+   Replaces the same morning's half-width fit, whose blurred side strips showed on real phones. */
+@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-banner-tower-phone-wide.webp')!important;--ih:max(217.054vw, calc((100svh - 481px) * 2.227));background-color:#34330b!important;background-size:auto var(--ih)!important;background-position:50% calc(112px - 0.271 * var(--ih))!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
+@media(max-width:767px){.hero .hero-media{min-height:max(calc(100svh - var(--ann-h,42px)), calc(132px + 97.46vw + 316px))!important}}
+@media(max-width:767px) and (max-height:700px){.hero .hero-media{min-height:max(calc(100svh - var(--ann-h,42px)), calc(132px + 97.46vw + 294px))!important}}
 </style>
 </body>
 </html>
