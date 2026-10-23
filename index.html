@@ -108,7 +108,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- premium port (16 Oct 2026, spec R6): the first hero slide is preloaded; slides 2 to 4 load after the page is ready -->
-<link rel="preload" as="image" type="image/webp" href="assets/hero-banner-tower-phone.webp" media="(max-width:767px)" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="assets/hero-banner-tower-phone-wide.webp" media="(max-width:767px)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="assets/hero-facade-mob.webp" media="(min-width:768px) and (max-width:1023px)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="assets/gal-facade-full.webp" media="(min-width:1024px)" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="assets/boska-500.woff2" crossorigin>
@@ -6169,8 +6169,15 @@ window.addEventListener('load',function(){if(!window.FontFace||!document.fonts)r
    the crown about 20 px under the menu bar and the building's base just above the place line (never narrower than
    the screen; on tall screens the strip under the banner's foot sits under the shade in the banner's own ground
    colour). The big lockup is off on phones (the menu bar keeps the project mark), so the shade is cut back to the
-   copy band in the site's own colour: a short fade under the menu, dense behind the copy, clear above it. */
-@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-banner-tower-phone.webp')!important;--ih:max(217.054vw, calc((100svh - 479px) * 2.227));background-color:#34330b!important;background-size:auto var(--ih)!important;background-position:50% calc(112px - 0.271 * var(--ih))!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
+   copy band in the site's own colour: a short fade under the menu, dense behind the copy, clear above it.
+   Fit on real phones (23 Oct 2026, Justin: the facade right above the place line, as on M Aurora): at full screen
+   width the building is too tall for a phone's visible height (Safari about 659 to 695 px), so its base ran about
+   130 px behind the copy. The banner may now be drawn down to half the screen width so the base sits about 20 px
+   above the place line; the -wide file is the same banner centred on a canvas twice as wide, its sides filled with
+   its own edge colours (blurred, feathered into the original), so the screen is always covered. 463 / 481 px = the
+   first screen less the copy band, on short (max-height:700px, the page's own copy-band switch) and taller phones. */
+@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-banner-tower-phone-wide.webp')!important;--ih:max(108.527vw, calc((100svh - 481px) * 2.227));background-color:#34330b!important;background-size:auto var(--ih)!important;background-position:50% calc(112px - 0.271 * var(--ih))!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
+@media(max-width:767px) and (max-height:700px){.hero .hero-media .hero-art.hs-1{--ih:max(108.527vw, calc((100svh - 463px) * 2.227))}}
 </style>
 </body>
 </html>
