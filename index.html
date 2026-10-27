@@ -3689,12 +3689,12 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
 </section>
 <script>
 /* 26 Oct 2026 (iPhone hero fit): on short phone screens (iPhone Safari with its bars) draw the tower banner so the
-   towers end above the place line; the banner's sides are a widened copy of the same render. Without JS the fit
+   whole building (podium included) ends above the place line; the banner's sides are a widened copy of the same render. Without JS the fit
    stays as before. */
 (function(){
   var art=document.querySelector('.hero .hero-media .hero-art.hs-1'),place=document.querySelector('.h-place');
   if(!art||!place||!window.matchMedia)return;
-  var mq=window.matchMedia('(max-width:767px)'),CROWN=0.271,CLEAR=0.60,ASPECT=0.8982;
+  var mq=window.matchMedia('(max-width:767px)'),CROWN=0.271,CLEAR=0.72,ASPECT=0.8982;
   function fit(){
     if(!mq.matches){art.style.removeProperty('--ihb');return;}
     var op=art.offsetParent||document.body,at=op.getBoundingClientRect().top+op.clientTop+art.offsetTop,p=place.getBoundingClientRect(),vw=document.documentElement.clientWidth;
