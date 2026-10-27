@@ -107,7 +107,7 @@
 
 <!-- premium port (16 Oct 2026, spec R6): the first hero slide is preloaded; slides 2 to 4 load after the page is ready -->
 <!-- 26 Oct 2026 (speed pass): the phone banner is served at the screen's resolution: 860 px wide at 1x and 2x, 1080 px wide at 3x (same candidates as the image-set rule in the head styles). -->
-<link rel="preload" as="image" type="image/webp" href="assets/hero-banner-tower-phone-1080.webp" imagesrcset="assets/hero-banner-tower-phone-860.webp 1x, assets/hero-banner-tower-phone-860.webp 2x, assets/hero-banner-tower-phone-1080.webp 3x" media="(max-width:767px)" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="assets/hero-facade-phone-1080.webp" imagesrcset="assets/hero-facade-phone-860.webp 1x, assets/hero-facade-phone-860.webp 2x, assets/hero-facade-phone-1080.webp 3x" media="(max-width:767px)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="assets/hero-facade-mob.webp" media="(min-width:768px) and (max-width:1023px)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="assets/gal-facade-full.webp" media="(min-width:1024px)" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="assets/boska-500.woff2" crossorigin>
@@ -3516,8 +3516,13 @@ html.hero-more .city-sec{background:linear-gradient(180deg,var(--ivory) 0%,var(-
    the crown about 20 px under the menu bar and the building's base just above the place line (never narrower than
    the screen; on tall screens the strip under the banner's foot sits under the shade in the banner's own ground
    colour). The big lockup is off on phones (the menu bar keeps the project mark), so the shade is cut back to the
-   copy band in the site's own colour: a short fade under the menu, dense behind the copy, clear above it. */
-@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-banner-tower-phone-1080.webp')!important;background-image:image-set(url('assets/hero-banner-tower-phone-860.webp') 1x,url('assets/hero-banner-tower-phone-860.webp') 2x,url('assets/hero-banner-tower-phone-1080.webp') 3x)!important;--ih:max(217.054vw, calc((100svh - 479px) * 2.227));background-color:#34330b!important;background-size:auto var(--ih)!important;background-position:50% calc(112px - 0.271 * var(--ih))!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
+   copy band in the site's own colour: a short fade under the menu, dense behind the copy, clear above it.
+   27 Oct 2026 (iPhone hero fit, Justin: the facade must sit above the location line on iPhone): the portrait banner is
+   too narrow for the whole building to fit above the place line on Safari's short visible screen, so phones show Mah
+   Sing's landscape facade render (the gallery image, same building and light): the render's top at the banner top,
+   the building's base 14 px above the place line (an inline script measures it; this CSS height is the no-JS
+   estimate), sides a plain mirror well inside the margin beside the building, its foot faded into the shade colour. */
+@media(max-width:767px){.hero .hero-media .hero-art.hs-1{background-image:url('assets/hero-facade-phone-1080.webp')!important;background-image:image-set(url('assets/hero-facade-phone-860.webp') 1x,url('assets/hero-facade-phone-860.webp') 2x,url('assets/hero-facade-phone-1080.webp') 3x)!important;--ih:max(calc((100svh - 351px) * 1.045), 60.66vw);background-color:rgb(48,36,20)!important;background-size:auto var(--ihb, var(--ih))!important;background-position:50% 0!important;background-repeat:no-repeat!important}.hero .h-logo,.hero .hero-inner .h-logo{display:none!important}.hero .hero-scrim{top:0!important;bottom:0!important;height:auto!important;background:linear-gradient(180deg,rgba(48,34,19,0.55) 0,rgba(48,34,19,0.33) 64px,rgba(48,34,19,0) 128px),linear-gradient(0deg,rgba(48,34,19,.9) 0,rgba(48,34,19,.84) 180px,rgba(48,34,19,.8) 291px,rgba(48,34,19,.76) 331px,rgba(48,34,19,.46) 371px,rgba(48,34,19,.18) 416px,rgba(48,34,19,0) 461px)!important}}
 </style>
 <style>
 /* 26 Oct 2026 (speed pass): the two below-the-fold backgrounds this page paints behind html.hero-more (the highway foot band on #city,
@@ -3687,6 +3692,27 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
     <a href="#quickRegister" class="scroll-ind" aria-label="Scroll down"><span class="scroll-arrow"></span></a>
   </div>
 </section>
+<script>
+/* 27 Oct 2026 (iPhone hero fit): draw the phone facade render so the building's base ends 14 px above the place line
+   on this screen (iPhone Safari with its bars included). The render's top stays at the banner top. Without JS the
+   rule's CSS estimate stays. */
+(function(){
+  var art=document.querySelector('.hero .hero-media .hero-art.hs-1'),place=document.querySelector('.h-place');
+  if(!art||!place||!window.matchMedia)return;
+  var mq=window.matchMedia('(max-width:767px)'),BASE=0.957,ASPECT=1.6487;  /* base row / height; canvas width / height */
+  function fit(){
+    if(!mq.matches){art.style.removeProperty('--ihb');return;}
+    var op=art.offsetParent||document.body,at=op.getBoundingClientRect().top+op.clientTop+art.offsetTop,p=place.getBoundingClientRect(),vw=document.documentElement.clientWidth;
+    var room=p.top-at-14;                                     /* at = the banner's layout top (its 7.5 s drift transform is ignored) */
+    if(room<=0)return;
+    var ih=Math.max(room/BASE,vw/ASPECT+1);                    /* the canvas always covers the screen */
+    art.style.setProperty('--ihb',ih.toFixed(1)+'px');
+  }
+  fit();
+  window.addEventListener('resize',fit);if(mq.addEventListener)mq.addEventListener('change',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+})();
+</script>
 <!-- 2026-10-09 (Justin): the quick form sits right below the hero. It keeps its .nx wrapper
      so the scoped form styles still apply. -->
 <div class="nx">
