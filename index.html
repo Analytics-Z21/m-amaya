@@ -3793,9 +3793,7 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
   </div>
   <div class="vr-stage" id="vrStage">
     <div class="vr-load">Loading the tour&hellip;</div>
-    <iframe id="vrFrame" title="360 degree virtual tour" src="about:blank" allowfullscreen
-      allow="fullscreen; accelerometer; gyroscope; magnetometer; xr-spatial-tracking"
-      referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <!-- the tour frame (#vrFrame) is created on open and removed on close, so a tour view leaves no extra Back-button steps -->
   </div>
   <div class="vr-foot">
     <span class="vr-note" id="vrNote">Drag to look around</span>
@@ -6467,9 +6465,27 @@ window.z21Track = function (name, params) {
     E:{label:'Type E',url:VRB+'type-e/'}
   };
   var el=document.getElementById('vrLb');if(!el)return;
-  var frame=document.getElementById('vrFrame'),stage=document.getElementById('vrStage'),
+  var frame=null,stage=document.getElementById('vrStage'),
       cta=document.getElementById('vrCta'),unitEl=document.getElementById('vrUnit'),x=document.getElementById('vrX');
   var opener=null,ownLoad=false;
+  /* A fresh frame per view: its first load replaces the frame's blank start, so opening adds no browser history, and
+     removing it on close drops whatever the tour added (its type and floor moves). Reusing one frame and blanking it
+     left one dead Back press per close (checked 27 Nov: two views = three extra Back presses before leaving the page). */
+  function makeFrame(url){
+    var f=document.createElement('iframe');
+    f.id='vrFrame';f.title='360 degree virtual tour';
+    f.setAttribute('allowfullscreen','');
+    f.setAttribute('allow','fullscreen; accelerometer; gyroscope; magnetometer; xr-spatial-tracking');
+    f.setAttribute('referrerpolicy','no-referrer-when-downgrade');
+    f.addEventListener('load',function(){
+      if(f!==frame||!el.classList.contains('on'))return;
+      stage.classList.add('ready');
+      if(ownLoad){ownLoad=false;return;}
+      setUnit(null);                       /* the visitor moved inside the tour */
+    });
+    f.src=url;
+    return f;
+  }
   /* the tour's own menu (Choose Type, Choose Floor) moves the frame to another tour on dll.studio. The page cannot read a
      cross-site frame's address, so any frame load this script did not start means the type is no longer known: the bar
      drops the type and the ask becomes the general price list (no unit), rather than naming a type the visitor left. */
@@ -6485,7 +6501,9 @@ window.z21Track = function (name, params) {
     setUnit(key);
     stage.classList.remove('ready');
     ownLoad=true;
-    frame.src=t.url;
+    if(frame&&frame.parentNode)frame.parentNode.removeChild(frame);
+    frame=makeFrame(t.url);
+    stage.appendChild(frame);
     el.classList.add('on');el.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
     x.focus();
@@ -6495,7 +6513,8 @@ window.z21Track = function (name, params) {
     if(!el.classList.contains('on'))return;
     el.classList.remove('on');el.setAttribute('aria-hidden','true');
     ownLoad=false;
-    frame.src='about:blank';               /* stop the tour rendering and free the memory */
+    if(frame&&frame.parentNode)frame.parentNode.removeChild(frame);   /* stops the tour, frees the memory, drops its history */
+    frame=null;
     stage.classList.remove('ready');
     var dr=document.getElementById('leadDrawer');
     if(!(dr&&dr.classList.contains('open')))document.body.style.overflow='';
@@ -6504,12 +6523,6 @@ window.z21Track = function (name, params) {
     opener=null;
     if(back&&typeof back.focus==='function'){try{back.focus({preventScroll:true});}catch(e){}}
   }
-  frame.addEventListener('load',function(){
-    if(!el.classList.contains('on')||frame.src.indexOf('about:blank')>-1)return;
-    stage.classList.add('ready');
-    if(ownLoad){ownLoad=false;return;}
-    setUnit(null);                         /* the visitor moved inside the tour */
-  });
   x.addEventListener('click',closeVr);
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&el.classList.contains('on'))closeVr();});
   /* the price ask: close the viewer first (so the drawer keeps the page locked), then the binder opens the drawer */
