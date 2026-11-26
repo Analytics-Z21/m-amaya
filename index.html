@@ -3566,7 +3566,8 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
 .o9p-price .o9p-ten{font-weight:500;color:var(--paper-mute);font-size:14px}
 .o9p-acts{display:flex;gap:8px;flex:none}
 .o9-plink{display:none}
-/* phone header: the title, the spec line across, then the price text | 'Get Type X pricing' link (no 360 tour on Amaya, no status badge) */
+/* phone header: the title, the spec line across, then the price text | 'Get Type X pricing' link (no status badge). Since 27 Nov
+   2026 a type with a 360 tour puts the 360 pill beside the title (.has-vt, rules after .o9-pill below). */
 @media(max-width:1023px){
   .o9p-head{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center}
   .o9p-ttl{display:contents}
@@ -3582,6 +3583,45 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
 .nx .o9-pill{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 16px;border-radius:2px;border:1.5px solid rgba(41,50,24,.22);background:#fff;color:var(--paper-fg);font:600 13px/1 var(--fb);white-space:nowrap;cursor:pointer;touch-action:manipulation}
 .o9-pill svg{flex:none}
 @media(hover:hover) and (pointer:fine){.nx .o9-pill:hover{border-color:var(--olive)}}
+/* 360 tour (27 Nov 2026): Mah Sing's tour (dll.studio, one per type) opens in the on-page viewer from a dark pill beside
+   Enlarge, shown for a type that has a tour (data-vr-types on #uVt; all five today). Phones: the header becomes
+   title | 360 pill, as on M Aurora; Enlarge stays desktop-only there (the plan box keeps its icon-only zoom hint). */
+.nx .o9-pill-dark{background:var(--forest);border-color:var(--forest);color:var(--champagne)}
+@media(hover:hover) and (pointer:fine){.nx .o9-pill-dark:hover{background:var(--forest-d);border-color:var(--forest-d)}}
+.nx .o9-pill[hidden]{display:none}
+@media(max-width:1023px){
+  .nx #layouts .o9p-head.has-vt .o9p-ttl h3{grid-column:1}
+  .o9p-head.has-vt .o9p-acts{display:flex;grid-column:2;grid-row:1;justify-self:end}
+  .o9p-acts .o9-pill-enl{display:none}
+}
+/* 360 tour viewer: full screen over the page (above the lead drawer, below the plan zoom). Bar: title, the type, close.
+   Foot: a short note and the type's price ask, which opens the lead drawer (vr_tour_A). */
+.vr{position:fixed;inset:0;z-index:1400;display:none;flex-direction:column;background:rgba(24,30,14,.97);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.vr.on{display:flex}
+.vr-bar,.vr-foot{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 16px;background:rgba(31,38,18,.96)}
+.vr-bar{border-bottom:1px solid rgba(178,137,87,.3)}
+.vr-foot{border-top:1px solid rgba(178,137,87,.3);justify-content:space-between;padding:12px 16px}
+.vr-ttl{font:500 18px/1.2 var(--fd);color:var(--champagne);white-space:nowrap}
+.vr-unit{font:600 12px/1 var(--fb);letter-spacing:.12em;text-transform:uppercase;color:var(--night-accent);white-space:nowrap}
+.vr-x{flex:0 0 auto;margin-left:auto;width:44px;height:44px;border-radius:2px;border:1px solid rgba(178,137,87,.4);
+  background:rgba(41,50,24,.8);color:var(--champagne);font-size:24px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+@media(hover:hover) and (pointer:fine){.vr-x:hover{background:rgba(178,137,87,.22)}}
+.vr-stage{flex:1 1 auto;position:relative;min-height:0;background:#000}
+.vr-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.vr-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  font:500 13px/1.4 var(--fb);letter-spacing:.04em;color:var(--night-mute);transition:opacity .3s}
+.vr-stage.ready .vr-load{opacity:0}
+.vr-foot .vr-note{max-width:none;margin:0;text-align:left;font:400 13px/1.4 var(--fb);color:var(--night-mute)}
+.vr-cta{flex:0 0 auto;min-height:44px;padding:0 22px;border-radius:0;border:1.5px solid var(--ask-br);background:var(--ask-bg);
+  color:var(--ask-fg);font:600 14px/1.2 var(--fb);letter-spacing:.03em;cursor:pointer;touch-action:manipulation}
+@media(hover:hover) and (pointer:fine){.vr-cta:hover{background:#463D03}}
+@media(max-width:600px){
+  .vr-ttl{font-size:17px}
+  .vr-foot .vr-note{display:none}
+  .vr-cta{width:100%}
+}
 /* desktop: the Enlarge pill in the header is the one enlarge affordance. Phones: an icon-only hint in the plan box. */
 @media(min-width:1024px){.nx #layouts .o9-plan .unit-zoom{display:none}}
 @media(max-width:1023px){
@@ -3671,6 +3711,7 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
     <a href="#developer" data-rail>Developer</a>
     <a href="#faq" data-rail>FAQ</a>
     <a href="#visit" data-rail>Visit</a>
+    <a href="https://dll.studio/vr/m-amaya/" target="_blank" rel="noopener" data-vr="A" data-tour-source="nav">360&deg; VR</a>
   </nav>
 
   <!-- Legacy semantic fallback (hidden) -->
@@ -3723,6 +3764,8 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
       <div class="mobile-drawer-label">Explore</div>
       <ul class="mobile-menu-links">
           <li><a href="#layouts">Layouts</a></li>
+          <!-- 27 Nov 2026: the 360 tour, second so it shows on the first screen of an iPhone (the last items sit under the price ask) -->
+          <li><a href="https://dll.studio/vr/m-amaya/" target="_blank" rel="noopener" data-vr="A" data-tour-source="nav">360&deg; VR Tour</a></li>
           <li><a href="#connect">Connectivity</a></li>
           <li><a href="#story">The Story</a></li>
           <li><a href="#fac">Facilities</a></li>
@@ -3738,6 +3781,27 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
     <button type="button" class="mobile-cta" data-open-lead="mobile-menu" data-cta-id="mobile_menu_register">Get Price List Now</button>
   </div>
 </aside>
+
+<!-- 360 VR tour viewer (27 Nov 2026, the M Aurora viewer in M Amaya's colours). Placed before the lead-drawer script so the
+     [data-open-lead] binder binds the price button. The tour (Pano2VR, dll.studio) sends no framing block, so it embeds
+     directly; the controller is at the end of the page. -->
+<div class="vr" id="vrLb" role="dialog" aria-modal="true" aria-hidden="true" aria-label="360 degree virtual tour">
+  <div class="vr-bar">
+    <span class="vr-ttl">360&deg; Virtual Tour</span>
+    <span class="vr-unit" id="vrUnit">Type A</span>
+    <button class="vr-x" id="vrX" type="button" aria-label="Close virtual tour">&times;</button>
+  </div>
+  <div class="vr-stage" id="vrStage">
+    <div class="vr-load">Loading the tour&hellip;</div>
+    <iframe id="vrFrame" title="360 degree virtual tour" src="about:blank" allowfullscreen
+      allow="fullscreen; accelerometer; gyroscope; magnetometer; xr-spatial-tracking"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <div class="vr-foot">
+    <span class="vr-note" id="vrNote">Drag to look around</span>
+    <button class="vr-cta" id="vrCta" type="button" data-open-lead="vr_tour_A" data-unit="Type A" data-cta-id="tour_get_price">Get Type A pricing</button>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="about">
@@ -3897,7 +3961,7 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
 
     <div class="o9-grid rv">
       <div class="o9-plan">
-        <div class="o9p-head">
+        <div class="o9p-head has-vt">
           <div class="o9p-ttl">
             <h3>Type <span id="uName">A</span></h3>
             <p class="o9p-line" id="uLine">1 bed &middot; 2 bath &middot; 1 Study &middot; 721 sq ft</p>
@@ -3910,6 +3974,9 @@ html.hero-more .city-sec:not(.in){background-image:none!important}
           </div>
           <div class="o9p-acts">
             <button type="button" class="o9-pill o9-pill-enl" id="uEnlarge" aria-label="Enlarge the floor plan"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Enlarge</button>
+            <!-- 27 Nov 2026: 360 tour pill (as on M Aurora), opens the selected type's tour. Shown for a type listed in
+                 data-vr-types (all five today); render() sets data-vr, data-unit and the label per type -->
+            <button type="button" class="o9-pill o9-pill-dark" id="uVt" data-vr="A" data-vr-types="A,B,C,D,E" data-unit="Type A" data-tour-source="unit_card" aria-label="Take the Type A 360&deg; virtual tour"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>360&deg; tour</button>
           </div>
         </div>
         <div class="unit-plan" id="planWrap" data-plan-view="floor">
@@ -5707,7 +5774,8 @@ window.z21Track = function (name, params) {
     siteNav: 'nav', rail: 'nav', mobileMenu: 'mobile_menu', about: 'hero', trust: 'overview',
     layouts: 'units', quickRegister: 'form', connect: 'location', story: 'overview',
     fac: 'facilities', gallery: 'gallery', interiors: 'gallery', city: 'location', loc: 'location',
-    developer: 'overview', faq: 'faq', visit: 'form', contact: 'footer', leadDrawer: 'form', fpLb: 'lightbox'
+    developer: 'overview', faq: 'faq', visit: 'form', contact: 'footer', leadDrawer: 'form', fpLb: 'lightbox',
+    vrLb: 'virtual_tour'
   };
   function sectionOf(el) {
     for (var n = el; n && n.nodeType === 1; n = n.parentElement) {
@@ -5844,15 +5912,16 @@ window.z21Track = function (name, params) {
       /* 7. calculator price picker (first interaction per page view) */
       if (t.closest('#cpPick, #cpMenu')) { calcOnce('price'); return; }
 
-      /* 8. 360 / virtual tour (none on this page today; kept so a future tour link reports) */
-      var tour = t.closest('[data-imod], [data-tour], a[href*="matterport.com"], a[href*="/360"]');
+      /* 8. 360 / virtual tour. 27 Nov 2026: the tour opens in the on-page viewer from [data-vr] (plan pill = unit_card
+         with the selected type; desktop nav and mobile menu = nav, Type A start, no unit), reported as tour_mode modal */
+      var tour = t.closest('[data-vr], [data-imod], [data-tour], a[href*="matterport.com"], a[href*="/360"]');
       if (tour) {
         var ts = sectionOf(tour);
         track('virtual_tour_open', {
           tour_source: tour.getAttribute('data-tour-source') ||
             ({ nav: 'nav', mobile_menu: 'nav', hero: 'hero', location: 'location', gallery: 'gallery' })[ts] || 'inline',
           unit_interest: tour.getAttribute('data-unit') || undefined,
-          tour_mode: tour.hasAttribute('data-imod') ? 'modal' : 'new_tab'
+          tour_mode: (tour.hasAttribute('data-vr') || tour.hasAttribute('data-imod')) ? 'modal' : 'new_tab'
         });
       }
     } catch (err) { /* tracking must never break the page */ }
@@ -5949,6 +6018,13 @@ window.z21Track = function (name, params) {
     $('planWrap').setAttribute('data-full',u.full);
     if(typeof window.setLeadFields==='function')window.setLeadFields($('layoutForm'),'Type '+cur,'layout_panel');
     var cc=$('cCta');if(cc){cc.setAttribute('data-unit','Type '+cur);cc.textContent='Send me the Type '+cur+' price list';}
+    /* 27 Nov 2026: the 360 pill opens this type's tour and shows only for a type with one (data-vr-types, all five
+       today); a type without one drops the header to the no-pill layout */
+    var vt=$('uVt');
+    if(vt){var hasVt=(vt.getAttribute('data-vr-types')||'').split(',').indexOf(cur)>-1;
+      vt.hidden=!hasVt;vt.setAttribute('data-vr',cur);vt.setAttribute('data-unit','Type '+cur);
+      vt.setAttribute('aria-label','Take the Type '+cur+' 360° virtual tour');
+      var vh=vt.closest('.o9p-head');if(vh)vh.classList.toggle('has-vt',hasVt);}
     Array.prototype.forEach.call(document.querySelectorAll('#tabs .tab'),function(t){
       t.setAttribute('aria-selected',String(t.getAttribute('data-type')===cur));});
     calc();
@@ -6368,6 +6444,84 @@ window.z21Track = function (name, params) {
     if(e.key!=='Escape')return;
     if(vm.classList.contains('on'))closeV();
     if(im.classList.contains('on'))closeI();
+  });
+})();
+</script>
+<script>
+/* ---- 360 VR tour viewer (27 Nov 2026) ------------------------------------------------------------------------------
+   Mah Sing's M Amaya tour is a Pano2VR build on dll.studio (the same one m-amaya.com.my/vr/ frames). dll.studio sends no
+   X-Frame-Options and no CSP frame-ancestors (checked 27 Nov on the root, type-b/ to type-e/ and lvl13/ to lvl37/), so it
+   embeds directly, no proxy. One tour per type (A at the root, B to E in their folders) plus six aerial level views reached
+   from the tour's own Choose Floor menu. A type added or removed: change VRTOURS and data-vr-types on #uVt together.
+   Entry points carry data-vr (the plan pill #uVt, the desktop nav rail and the mobile menu); the page's click tracker
+   reports virtual_tour_open (tour_mode modal). The price button carries data-open-lead in the markup, so the lead-drawer
+   binder opens the drawer; this script only closes the viewer first (capture phase, before the binder's listener). */
+(function(){
+  'use strict';
+  var VRB='https://dll.studio/vr/m-amaya/';
+  var VRTOURS={
+    A:{label:'Type A',url:VRB},               /* Type A is the tour's root (there is no /type-a/) */
+    B:{label:'Type B',url:VRB+'type-b/'},
+    C:{label:'Type C',url:VRB+'type-c/'},
+    D:{label:'Type D',url:VRB+'type-d/'},
+    E:{label:'Type E',url:VRB+'type-e/'}
+  };
+  var el=document.getElementById('vrLb');if(!el)return;
+  var frame=document.getElementById('vrFrame'),stage=document.getElementById('vrStage'),
+      cta=document.getElementById('vrCta'),unitEl=document.getElementById('vrUnit'),x=document.getElementById('vrX');
+  var opener=null,ownLoad=false;
+  /* the tour's own menu (Choose Type, Choose Floor) moves the frame to another tour on dll.studio. The page cannot read a
+     cross-site frame's address, so any frame load this script did not start means the type is no longer known: the bar
+     drops the type and the ask becomes the general price list (no unit), rather than naming a type the visitor left. */
+  function setUnit(key){
+    var t=key&&VRTOURS[key];
+    unitEl.hidden=!t;unitEl.textContent=t?t.label:'';
+    if(t){cta.textContent='Get '+t.label+' pricing';cta.setAttribute('data-unit',t.label);cta.setAttribute('data-open-lead','vr_tour_'+key);}
+    else{cta.textContent='Get Price List Now';cta.removeAttribute('data-unit');cta.setAttribute('data-open-lead','vr_tour');}
+  }
+  function openVr(key,from){
+    var t=VRTOURS[key];if(!t)return false;
+    opener=from||null;
+    setUnit(key);
+    stage.classList.remove('ready');
+    ownLoad=true;
+    frame.src=t.url;
+    el.classList.add('on');el.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    x.focus();
+    return true;
+  }
+  function closeVr(){
+    if(!el.classList.contains('on'))return;
+    el.classList.remove('on');el.setAttribute('aria-hidden','true');
+    ownLoad=false;
+    frame.src='about:blank';               /* stop the tour rendering and free the memory */
+    stage.classList.remove('ready');
+    var dr=document.getElementById('leadDrawer');
+    if(!(dr&&dr.classList.contains('open')))document.body.style.overflow='';
+    /* focus back where the visitor was: the pill, or the menu button when the tour came from the closed mobile menu */
+    var back=opener&&opener.closest&&opener.closest('#mobileMenu')?document.getElementById('navHam'):opener;
+    opener=null;
+    if(back&&typeof back.focus==='function'){try{back.focus({preventScroll:true});}catch(e){}}
+  }
+  frame.addEventListener('load',function(){
+    if(!el.classList.contains('on')||frame.src.indexOf('about:blank')>-1)return;
+    stage.classList.add('ready');
+    if(ownLoad){ownLoad=false;return;}
+    setUnit(null);                         /* the visitor moved inside the tour */
+  });
+  x.addEventListener('click',closeVr);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&el.classList.contains('on'))closeVr();});
+  /* the price ask: close the viewer first (so the drawer keeps the page locked), then the binder opens the drawer */
+  document.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('#vrCta'))closeVr();},true);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-vr]'),function(a){
+    a.addEventListener('click',function(e){
+      var key=a.getAttribute('data-vr');
+      if(!VRTOURS[key])return;              /* no tour for this key: let a link open normally */
+      e.preventDefault();
+      if(a.closest('#mobileMenu')){var mc=document.querySelector('#mobileMenu .mobile-menu-close');if(mc)mc.click();}
+      openVr(key,a);
+    });
   });
 })();
 </script>
